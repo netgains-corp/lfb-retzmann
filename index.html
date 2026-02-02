@@ -1,22 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Phone, Mail, Clock, MapPin, Menu, X, ChevronDown, Hammer, Home, Truck, Users, ArrowRight, CheckCircle2, Star, Layers, Leaf, Maximize, ChevronRight, Lightbulb, MessageSquare, Palette, ChevronLeft, User, Printer, Quote } from 'lucide-react';
 
 const App = () => {
-  // State für Navigation & Views
+  // --- STATE MANAGEMENT ---
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentView, setCurrentView] = useState('home'); // 'home', 'trockenbau', 'ansprechpartner', 'ausstellungen'
   const [scrolled, setScrolled] = useState(false);
+  const [scrollTarget, setScrollTarget] = useState(null); // Für verzögertes Scrollen nach View-Wechsel
   
-  // States für Slider & Tabs
   const [currentHeroSlide, setCurrentHeroSlide] = useState(0);
   const [activeExhibitionTab, setActiveExhibitionTab] = useState('Garten');
   const [mobileSubmenu, setMobileSubmenu] = useState(null);
-  
-  // Theme State
   const [themeColor, setThemeColor] = useState('red'); 
   const [showThemePicker, setShowThemePicker] = useState(false);
 
-  // Helper für dynamische Farbklassen
+  // --- THEME CONFIG ---
   const theme = {
     red: {
       bg: 'bg-red-600',
@@ -56,32 +54,51 @@ const App = () => {
     }
   }[themeColor];
 
-  // Navigation Helper
+  // --- NAVIGATION LOGIC ---
+  
+  // 1. View wechseln & nach oben springen
   const navigateTo = (viewId) => {
     setCurrentView(viewId);
     setIsMenuOpen(false);
+    setMobileSubmenu(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // 2. Zu Sektion scrollen (auch von Unterseiten aus)
   const scrollToSection = (id) => {
+    setIsMenuOpen(false);
     if (currentView !== 'home') {
       setCurrentView('home');
-      // Timeout to allow render before scrolling
-      setTimeout(() => {
-        const element = document.getElementById(id);
-        if (element) element.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
+      setScrollTarget(id); // Merken, wohin wir wollen
     } else {
       const element = document.getElementById(id);
-      if (element) element.scrollIntoView({ behavior: 'smooth' });
+      if (element) {
+        // Offset für Sticky Header
+        const headerOffset = 100;
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+      }
     }
-    setIsMenuOpen(false);
   };
 
-  const toggleMobileSubmenu = (index) => {
-    setMobileSubmenu(mobileSubmenu === index ? null : index);
-  };
+  // 3. Scroll Effect Handler (Verzögertes Scrollen wenn Home gerendert wurde)
+  useEffect(() => {
+    if (currentView === 'home' && scrollTarget) {
+      setTimeout(() => {
+        const element = document.getElementById(scrollTarget);
+        if (element) {
+          const headerOffset = 100;
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+          window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+        }
+        setScrollTarget(null); // Reset
+      }, 100); // Kurze Verzögerung für DOM-Rendering
+    }
+  }, [currentView, scrollTarget]);
 
+  // 4. Scroll Listener für Header-Style
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
@@ -90,7 +107,25 @@ const App = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // --- DATA ---
+  // 5. Hero Slider Auto-Play
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentHeroSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 8000); 
+    return () => clearInterval(timer);
+  }, []);
+
+  const toggleMobileSubmenu = (index) => {
+    setMobileSubmenu(mobileSubmenu === index ? null : index);
+  };
+  
+  // Fallback für Bilder, falls Hotlinking blockiert wird
+  const handleImageError = (e) => {
+    e.target.src = "https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=2689&auto=format&fit=crop"; // Hochwertiges Bau-Fallback
+    e.target.alt = "Bild konnte nicht geladen werden";
+  };
+
+  // --- CONTENT DATA ---
 
   const heroSlides = [
     {
@@ -114,13 +149,6 @@ const App = () => {
       subtitle: "Flexibel und passgenau für jeden Bedarf."
     }
   ];
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentHeroSlide((prev) => (prev + 1) % heroSlides.length);
-    }, 8000); 
-    return () => clearInterval(timer);
-  }, []);
 
   const historyData = [
     { year: '1971', text: 'Entstehung des Unternehmens als Niederlassung des Zentrum für modernsten Baubedarf Mat. Kröll GmbH & Co, am Standort Emmelshausen.' },
@@ -146,7 +174,7 @@ const App = () => {
 
   const departments = [
     { title: "Trockenbau", icon: Home, image: departmentImages["Trockenbau"], action: () => navigateTo('trockenbau') },
-    { title: "Bauelemente", icon: Star, image: departmentImages["Bauelemente"], action: () => navigateTo('home') }, // Placeholder
+    { title: "Bauelemente", icon: Star, image: departmentImages["Bauelemente"], action: () => navigateTo('home') }, 
     { title: "Baufachmarkt", icon: Hammer, image: departmentImages["Baufachmarkt"], action: () => navigateTo('home') },
     { title: "Fliesen & Sanitär", icon: CheckCircle2, image: departmentImages["Fliesen & Sanitär"], action: () => navigateTo('home') },
     { title: "Aussenanlage", icon: Leaf, image: departmentImages["Aussenanlage"], action: () => navigateTo('home') },
@@ -233,16 +261,18 @@ const App = () => {
     }
   ];
 
+  // Definition der Navigationsstruktur
   const navStructure = [
     { title: "Start", action: () => navigateTo('home') },
     { title: "Aktuelles", items: ["Angebote/Aktionen", "Restposten", "Neuigkeiten"] },
     { title: "Fachabteilungen", items: departments.map(d => ({ name: d.title, action: d.action })) },
     { title: "Ausstellungen", action: () => navigateTo('ausstellungen') },
+    { title: "Ratgeber", link: "#guides", action: () => scrollToSection('guides') }, // Fix for Guide Scroll
     { title: "Service & Beratung", items: ["Unsere Serviceleistungen", "Ansprechpartner", "Lieferservice", "Warenlager"] },
     { title: "Über uns", items: ["Bauzentrum Retzmann", "Ihr Weg zu uns", "Öffnungszeiten"] }
   ];
 
-  // Reusable CTA Button
+  // Helper Component for Buttons
   const CTAButton = ({ text, onClick, primary = true, className = "" }) => (
     <button 
       onClick={onClick}
@@ -288,17 +318,26 @@ const App = () => {
       <header className={`fixed w-full z-50 transition-all duration-300 top-0 md:top-9 ${scrolled || isMenuOpen ? 'bg-white shadow-sm py-3' : 'bg-white/95 backdrop-blur-sm py-5'}`}>
         <div className="container mx-auto px-6 flex justify-between items-center relative">
           
-          {/* Logo */}
           <div className="flex items-center gap-2 z-50 cursor-pointer" onClick={() => navigateTo('home')}>
             <div className="bg-white px-4 py-2 rounded-full shadow-lg border border-slate-100 flex items-center gap-3 transform hover:scale-105 transition-transform duration-300">
-               <img src="https://www.retzmann-bauzentrum.de/fileadmin/user_upload/Retzmann/images/logo_small.png" alt="Bauzentrum Retzmann" className="h-8 md:h-10 object-contain" />
+               <img src="https://www.retzmann-bauzentrum.de/fileadmin/user_upload/Retzmann/images/logo_small.png" alt="Bauzentrum Retzmann" className="h-8 md:h-10 object-contain" onError={handleImageError} />
             </div>
           </div>
 
-          {/* Desktop Nav */}
           <nav className="hidden xl:flex items-center gap-6">
             <button onClick={() => navigateTo('home')} className={`text-sm font-bold text-slate-800 ${theme.textHover} transition-colors`}>Start</button>
             
+            <div className="relative group">
+                <button className={`text-sm font-medium text-slate-600 group-hover:${theme.text} transition-colors flex items-center gap-1 py-4`}>
+                    Aktuelles <ChevronDown className="w-3 h-3" />
+                </button>
+                <div className={`absolute top-full left-0 bg-white shadow-xl border-t-2 ${theme.border} py-2 w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform translate-y-2 group-hover:translate-y-0`}>
+                    <button className={`block w-full text-left px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 ${theme.textHover}`}>Angebote/Aktionen</button>
+                    <button className={`block w-full text-left px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 ${theme.textHover}`}>Restposten</button>
+                    <button className={`block w-full text-left px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 ${theme.textHover}`}>Neuigkeiten</button>
+                </div>
+            </div>
+
             <div className="relative group">
                 <button className={`text-sm font-medium text-slate-600 group-hover:${theme.text} transition-colors flex items-center gap-1 py-4`}>
                     Fachabteilungen <ChevronDown className="w-3 h-3" />
@@ -321,9 +360,7 @@ const App = () => {
             </button>
           </nav>
 
-          {/* Right Controls */}
           <div className="flex items-center gap-4">
-             {/* Theme Picker */}
              <div className="relative z-50 hidden md:block">
                 <button 
                     onClick={() => setShowThemePicker(!showThemePicker)}
@@ -344,17 +381,16 @@ const App = () => {
                 )}
              </div>
 
-             {/* Hamburger Button */}
              <button 
                 onClick={() => setIsMenuOpen(!isMenuOpen)} 
-                className="text-slate-800 z-50 relative p-2 hover:bg-slate-100 rounded-sm transition-colors"
+                className="xl:hidden text-slate-800 z-50 relative p-2 hover:bg-slate-100 rounded-sm transition-colors"
              >
                 {isMenuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
              </button>
           </div>
         </div>
 
-        {/* === MOBILE MENU (Hamburger Drawer) === */}
+        {/* MOBILE DRAWER */}
         <div 
             className={`absolute top-full left-0 w-full bg-white border-b border-slate-200 shadow-2xl transition-all duration-300 ease-in-out overflow-hidden ${
                 isMenuOpen ? 'max-h-[90vh] opacity-100 visible' : 'max-h-0 opacity-0 invisible'
@@ -380,7 +416,7 @@ const App = () => {
                                                     key={subIndex} 
                                                     onClick={() => {
                                                       if(subItem.action) subItem.action();
-                                                      else if(subItem.name === "Trockenbau") navigateTo('trockenbau');
+                                                      else if(typeof subItem === 'string' && subItem === "Trockenbau") navigateTo('trockenbau');
                                                       else navigateTo('home');
                                                     }}
                                                     className={`text-slate-600 ${theme.textHover} text-base font-medium block transition-colors py-1 text-left w-full`}
@@ -418,8 +454,7 @@ const App = () => {
       {currentView === 'home' && (
         <div className="animate-in fade-in duration-500">
           
-          {/* HERO SLIDER */}
-          <section className="relative h-[85vh] min-h-[600px] flex items-center justify-center overflow-hidden bg-slate-900 mt-16 md:mt-24 group scroll-mt-40">
+          <section id="start" className="relative h-[85vh] min-h-[600px] flex items-center justify-center overflow-hidden bg-slate-900 mt-16 md:mt-24 group scroll-mt-40">
             {heroSlides.map((slide, index) => (
                 <div 
                     key={index}
@@ -429,6 +464,7 @@ const App = () => {
                         src={slide.image} 
                         alt={slide.title} 
                         className="w-full h-full object-cover opacity-60"
+                        onError={handleImageError}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent"></div>
                 </div>
@@ -466,7 +502,6 @@ const App = () => {
             <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce hidden md:block text-white/50 z-20"><ChevronDown className="w-8 h-8" /></div>
           </section>
 
-          {/* DEPARTMENTS */}
           <section id="departments" className="py-24 bg-white relative scroll-mt-32">
             <div className="container mx-auto px-6">
               <div className="text-center max-w-3xl mx-auto mb-16">
@@ -480,7 +515,7 @@ const App = () => {
                     return (
                         <div key={index} onClick={dept.action} className="group relative h-64 md:h-80 rounded-sm overflow-hidden hover:shadow-2xl transition-all duration-500 cursor-pointer">
                             <div className="absolute inset-0">
-                                <img src={dept.image} alt={dept.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                                <img src={dept.image} alt={dept.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onError={handleImageError} />
                                 <div className="absolute inset-0 bg-slate-900/40 group-hover:bg-slate-900/30 transition-colors"></div>
                                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 to-transparent"></div>
                             </div>
@@ -503,7 +538,6 @@ const App = () => {
             </div>
           </section>
 
-          {/* REVIEWS (NEW) */}
           <section id="reviews" className="py-24 bg-slate-50 border-t border-slate-200 scroll-mt-32">
             <div className="container mx-auto px-6">
                 <div className="text-center max-w-3xl mx-auto mb-16">
@@ -543,7 +577,6 @@ const App = () => {
             </div>
           </section>
 
-          {/* HISTORY */}
           <section id="history" className="py-24 bg-white border-t border-slate-200 scroll-mt-32">
             <div className="container mx-auto px-6">
                 <div className="flex flex-col lg:flex-row gap-16">
@@ -586,7 +619,7 @@ const App = () => {
              <div className="container mx-auto px-6 py-16">
                  <div className="flex flex-col lg:flex-row gap-12 items-start">
                      <div className="lg:w-1/2">
-                         <img src="https://images.unsplash.com/photo-1581094794329-cd136ce4dad5?q=80&w=2600&auto=format&fit=crop" alt="Trockenbau" className="w-full rounded-sm shadow-xl" />
+                         <img src="https://images.unsplash.com/photo-1581094794329-cd136ce4dad5?q=80&w=2600&auto=format&fit=crop" alt="Trockenbau" className="w-full rounded-sm shadow-xl" onError={handleImageError} />
                      </div>
                      <div className="lg:w-1/2">
                          <h2 className={`text-3xl font-bold text-slate-900 mb-6 border-l-4 ${theme.border} pl-4`}>Unser Sortiment</h2>
@@ -667,7 +700,7 @@ const App = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fadeIn">
                     {exhibitions[activeExhibitionTab].map((src, index) => (
                         <div key={index} className="group relative aspect-[4/3] rounded-sm overflow-hidden bg-slate-100">
-                            <img src={src} alt="" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                            <img src={src} alt="" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" onError={handleImageError} />
                             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
                                 <Maximize className="w-12 h-12 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
                             </div>
@@ -681,12 +714,12 @@ const App = () => {
           </div>
       )}
 
-      {/* === FOOTER (Always visible) === */}
+      {/* === FOOTER === */}
       <footer className="bg-slate-50 text-slate-600 py-16 border-t border-slate-200">
         <div className="container mx-auto px-6 grid md:grid-cols-4 gap-8 mb-12">
           <div>
              <div className="flex items-center gap-2 mb-6">
-                <img src="https://www.retzmann-bauzentrum.de/fileadmin/user_upload/Retzmann/images/logo_small.png" alt="Logo" className="h-8 opacity-80" />
+                <img src="https://www.retzmann-bauzentrum.de/fileadmin/user_upload/Retzmann/images/logo_small.png" alt="Logo" className="h-8 opacity-80" onError={handleImageError} />
              </div>
              <div className="text-sm space-y-2">
                  <p className="font-bold text-slate-900">Bauzentrum Retzmann GmbH</p>
@@ -698,7 +731,6 @@ const App = () => {
             <h4 className="font-bold text-slate-900 mb-4 uppercase text-sm tracking-wider">Fachabteilungen</h4>
             <ul className="space-y-2 text-sm">
                 <li><button onClick={() => navigateTo('trockenbau')} className={`hover:${theme.text} transition-colors text-left`}>Trockenbau</button></li>
-                {/* Other links would work similarly */}
                 <li><span className="text-slate-400 cursor-not-allowed">Bauelemente</span></li>
                 <li><span className="text-slate-400 cursor-not-allowed">Baufachmarkt</span></li>
             </ul>
