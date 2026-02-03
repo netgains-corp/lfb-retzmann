@@ -1,8 +1,8 @@
 /* BAUZENTRUM RETZMANN - LANDING PAGE
-   Status: Stable
+   Status: Stable (Fixed Missing Imports)
 */
 import React, { useState, useEffect } from 'react';
-import { Phone, Mail, Clock, MapPin, Menu, X, ChevronDown, Hammer, Home, Truck, Users, ArrowRight, CheckCircle2, Star, Layers, Leaf, Maximize, ChevronRight, Lightbulb, MessageSquare, Palette, ChevronLeft, User, Printer, Quote } from 'lucide-react';
+import { Phone, Mail, Clock, MapPin, Menu, X, ChevronDown, Hammer, Home, Truck, Users, ArrowRight, CheckCircle2, Star, Layers, Leaf, Maximize, Lightbulb, MessageSquare, Palette, ChevronLeft, ChevronRight, User, Printer, Quote } from 'lucide-react';
 
 const App = () => {
   // --- STATE MANAGEMENT ---
@@ -117,7 +117,6 @@ const App = () => {
 
   const heroSlides = [
     {
-      // Dies ist das Bild aus deinem Screenshot ("Unsere Leute...")
       image: "https://www.retzmann-bauzentrum.de/fileadmin/user_upload/Retzmann/seiten/Home/Slider/ProfikundenWebbanner1920x600Kompetenz201907261148.png",
       title: "Unsere Leute. Deine Kompetenz.",
       subtitle: "Das ist Profi-Partnerschaft!"
