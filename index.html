@@ -1,12 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
+/* BAUZENTRUM RETZMANN - LANDING PAGE
+   Status: Stable
+*/
+import React, { useState, useEffect } from 'react';
 import { Phone, Mail, Clock, MapPin, Menu, X, ChevronDown, Hammer, Home, Truck, Users, ArrowRight, CheckCircle2, Star, Layers, Leaf, Maximize, ChevronRight, Lightbulb, MessageSquare, Palette, ChevronLeft, User, Printer, Quote } from 'lucide-react';
 
 const App = () => {
   // --- STATE MANAGEMENT ---
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [currentView, setCurrentView] = useState('home'); // 'home', 'trockenbau', 'ansprechpartner', 'ausstellungen'
+  const [currentView, setCurrentView] = useState('home'); 
   const [scrolled, setScrolled] = useState(false);
-  const [scrollTarget, setScrollTarget] = useState(null); // Für verzögertes Scrollen nach View-Wechsel
+  const [scrollTarget, setScrollTarget] = useState(null); 
   
   const [currentHeroSlide, setCurrentHeroSlide] = useState(0);
   const [activeExhibitionTab, setActiveExhibitionTab] = useState('Garten');
@@ -55,8 +58,6 @@ const App = () => {
   }[themeColor];
 
   // --- NAVIGATION LOGIC ---
-  
-  // 1. View wechseln & nach oben springen
   const navigateTo = (viewId) => {
     setCurrentView(viewId);
     setIsMenuOpen(false);
@@ -64,16 +65,14 @@ const App = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // 2. Zu Sektion scrollen (auch von Unterseiten aus)
   const scrollToSection = (id) => {
     setIsMenuOpen(false);
     if (currentView !== 'home') {
       setCurrentView('home');
-      setScrollTarget(id); // Merken, wohin wir wollen
+      setScrollTarget(id); 
     } else {
       const element = document.getElementById(id);
       if (element) {
-        // Offset für Sticky Header
         const headerOffset = 100;
         const elementPosition = element.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
@@ -82,7 +81,6 @@ const App = () => {
     }
   };
 
-  // 3. Scroll Effect Handler (Verzögertes Scrollen wenn Home gerendert wurde)
   useEffect(() => {
     if (currentView === 'home' && scrollTarget) {
       setTimeout(() => {
@@ -93,12 +91,11 @@ const App = () => {
           const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
           window.scrollTo({ top: offsetPosition, behavior: "smooth" });
         }
-        setScrollTarget(null); // Reset
-      }, 100); // Kurze Verzögerung für DOM-Rendering
+        setScrollTarget(null);
+      }, 100);
     }
   }, [currentView, scrollTarget]);
 
-  // 4. Scroll Listener für Header-Style
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
@@ -107,28 +104,20 @@ const App = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // 5. Hero Slider Auto-Play
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentHeroSlide((prev) => (prev + 1) % heroSlides.length);
-    }, 8000); 
-    return () => clearInterval(timer);
-  }, []);
-
   const toggleMobileSubmenu = (index) => {
     setMobileSubmenu(mobileSubmenu === index ? null : index);
   };
   
-  // Fallback für Bilder, falls Hotlinking blockiert wird
   const handleImageError = (e) => {
-    e.target.src = "https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=2689&auto=format&fit=crop"; // Hochwertiges Bau-Fallback
-    e.target.alt = "Bild konnte nicht geladen werden";
+    e.target.src = "https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=2689&auto=format&fit=crop"; 
+    e.target.alt = "Bild nicht verfügbar";
   };
 
   // --- CONTENT DATA ---
 
   const heroSlides = [
     {
+      // Dies ist das Bild aus deinem Screenshot ("Unsere Leute...")
       image: "https://www.retzmann-bauzentrum.de/fileadmin/user_upload/Retzmann/seiten/Home/Slider/ProfikundenWebbanner1920x600Kompetenz201907261148.png",
       title: "Unsere Leute. Deine Kompetenz.",
       subtitle: "Das ist Profi-Partnerschaft!"
@@ -149,6 +138,22 @@ const App = () => {
       subtitle: "Flexibel und passgenau für jeden Bedarf."
     }
   ];
+
+  // Slider Timer
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentHeroSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 8000); 
+    return () => clearInterval(timer);
+  }, []);
+
+  const nextHeroSlide = () => {
+    setCurrentHeroSlide((prev) => (prev + 1) % heroSlides.length);
+  };
+
+  const prevHeroSlide = () => {
+    setCurrentHeroSlide((prev) => (prev === 0 ? heroSlides.length - 1 : prev - 1));
+  };
 
   const historyData = [
     { year: '1971', text: 'Entstehung des Unternehmens als Niederlassung des Zentrum für modernsten Baubedarf Mat. Kröll GmbH & Co, am Standort Emmelshausen.' },
@@ -261,13 +266,12 @@ const App = () => {
     }
   ];
 
-  // Definition der Navigationsstruktur
   const navStructure = [
     { title: "Start", action: () => navigateTo('home') },
     { title: "Aktuelles", items: ["Angebote/Aktionen", "Restposten", "Neuigkeiten"] },
     { title: "Fachabteilungen", items: departments.map(d => ({ name: d.title, action: d.action })) },
     { title: "Ausstellungen", action: () => navigateTo('ausstellungen') },
-    { title: "Ratgeber", link: "#guides", action: () => scrollToSection('guides') }, // Fix for Guide Scroll
+    { title: "Ratgeber", link: "#guides", action: () => scrollToSection('guides') },
     { title: "Service & Beratung", items: ["Unsere Serviceleistungen", "Ansprechpartner", "Lieferservice", "Warenlager"] },
     { title: "Über uns", items: ["Bauzentrum Retzmann", "Ihr Weg zu uns", "Öffnungszeiten"] }
   ];
@@ -714,7 +718,7 @@ const App = () => {
           </div>
       )}
 
-      {/* === FOOTER === */}
+      {/* === FOOTER (Always visible) === */}
       <footer className="bg-slate-50 text-slate-600 py-16 border-t border-slate-200">
         <div className="container mx-auto px-6 grid md:grid-cols-4 gap-8 mb-12">
           <div>
