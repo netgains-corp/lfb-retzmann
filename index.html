@@ -1,23 +1,24 @@
-/* BAUZENTRUM RETZMANN - LANDING PAGE
-   Status: Stable (Fixed Missing Imports)
-*/
+/* BAUZENTRUM RETZMANN - STABLE VERSION 3.0 */
 import React, { useState, useEffect } from 'react';
-import { Phone, Mail, Clock, MapPin, Menu, X, ChevronDown, Hammer, Home, Truck, Users, ArrowRight, CheckCircle2, Star, Layers, Leaf, Maximize, Lightbulb, MessageSquare, Palette, ChevronLeft, ChevronRight, User, Printer, Quote } from 'lucide-react';
+import { 
+  Phone, Mail, Clock, MapPin, Menu, X, ChevronDown, 
+  Hammer, Home, Truck, Users, ArrowRight, CheckCircle2, 
+  Star, Layers, Leaf, Maximize, Lightbulb, MessageSquare, 
+  Palette, ChevronLeft, ChevronRight, User, Printer, Quote 
+} from 'lucide-react';
 
 const App = () => {
-  // --- STATE MANAGEMENT ---
+  // --- STATE ---
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [currentView, setCurrentView] = useState('home'); 
+  const [currentView, setCurrentView] = useState('home');
   const [scrolled, setScrolled] = useState(false);
-  const [scrollTarget, setScrollTarget] = useState(null); 
-  
-  const [currentHeroSlide, setCurrentHeroSlide] = useState(0);
   const [activeExhibitionTab, setActiveExhibitionTab] = useState('Garten');
   const [mobileSubmenu, setMobileSubmenu] = useState(null);
-  const [themeColor, setThemeColor] = useState('red'); 
+  const [currentHeroSlide, setCurrentHeroSlide] = useState(0);
+  const [themeColor, setThemeColor] = useState('red');
   const [showThemePicker, setShowThemePicker] = useState(false);
 
-  // --- THEME CONFIG ---
+  // --- THEME CONFIGURATION ---
   const theme = {
     red: {
       bg: 'bg-red-600',
@@ -28,7 +29,6 @@ const App = () => {
       borderLight: 'border-red-100',
       bgLight: 'bg-red-50',
       shadow: 'shadow-red-600/20',
-      fill: 'fill-red-500',
       from: 'from-red-500',
     },
     blue: {
@@ -40,7 +40,6 @@ const App = () => {
       borderLight: 'border-blue-100',
       bgLight: 'bg-blue-50',
       shadow: 'shadow-blue-600/20',
-      fill: 'fill-blue-500',
       from: 'from-blue-500',
     },
     green: {
@@ -52,16 +51,21 @@ const App = () => {
       borderLight: 'border-emerald-100',
       bgLight: 'bg-emerald-50',
       shadow: 'shadow-emerald-600/20',
-      fill: 'fill-emerald-500',
       from: 'from-emerald-500',
     }
   }[themeColor];
 
-  // --- NAVIGATION LOGIC ---
+  // --- EFFECTS ---
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // --- NAVIGATION ---
   const navigateTo = (viewId) => {
     setCurrentView(viewId);
     setIsMenuOpen(false);
-    setMobileSubmenu(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -69,52 +73,17 @@ const App = () => {
     setIsMenuOpen(false);
     if (currentView !== 'home') {
       setCurrentView('home');
-      setScrollTarget(id); 
-    } else {
-      const element = document.getElementById(id);
-      if (element) {
-        const headerOffset = 100;
-        const elementPosition = element.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-        window.scrollTo({ top: offsetPosition, behavior: "smooth" });
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (currentView === 'home' && scrollTarget) {
       setTimeout(() => {
-        const element = document.getElementById(scrollTarget);
-        if (element) {
-          const headerOffset = 100;
-          const elementPosition = element.getBoundingClientRect().top;
-          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-          window.scrollTo({ top: offsetPosition, behavior: "smooth" });
-        }
-        setScrollTarget(null);
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 100);
+    } else {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-  }, [currentView, scrollTarget]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const toggleMobileSubmenu = (index) => {
-    setMobileSubmenu(mobileSubmenu === index ? null : index);
-  };
-  
-  const handleImageError = (e) => {
-    e.target.src = "https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=2689&auto=format&fit=crop"; 
-    e.target.alt = "Bild nicht verfügbar";
   };
 
   // --- CONTENT DATA ---
-
   const heroSlides = [
     {
       image: "https://www.retzmann-bauzentrum.de/fileadmin/user_upload/Retzmann/seiten/Home/Slider/ProfikundenWebbanner1920x600Kompetenz201907261148.png",
@@ -138,615 +107,394 @@ const App = () => {
     }
   ];
 
-  // Slider Timer
+  // Slider Auto-Play (8s)
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentHeroSlide((prev) => (prev + 1) % heroSlides.length);
-    }, 8000); 
+    }, 8000);
     return () => clearInterval(timer);
   }, []);
 
-  const nextHeroSlide = () => {
-    setCurrentHeroSlide((prev) => (prev + 1) % heroSlides.length);
-  };
+  const nextHeroSlide = () => setCurrentHeroSlide((prev) => (prev + 1) % heroSlides.length);
+  const prevHeroSlide = () => setCurrentHeroSlide((prev) => (prev === 0 ? heroSlides.length - 1 : prev - 1));
 
-  const prevHeroSlide = () => {
-    setCurrentHeroSlide((prev) => (prev === 0 ? heroSlides.length - 1 : prev - 1));
-  };
-
-  const historyData = [
-    { year: '1971', text: 'Entstehung des Unternehmens als Niederlassung des Zentrum für modernsten Baubedarf Mat. Kröll GmbH & Co, am Standort Emmelshausen.' },
-    { year: '1975', text: 'Beitritt zur Kooperation Mobau - Moderner Baubedarf und Gesellschafter des Zentrallagers in Euskirchen.' },
-    { year: '1978', text: 'Umsiedlung des Unternehmens auf das neue Firmengelände in Halsenbach und gleichzeitig die Umfirmierung in "Moderne Baubedarf Kröll GmbH".' },
-    { year: '1988', text: 'Eröffnung unseres Baufachmarktes in Boppard.' },
-    { year: '2005', text: 'Umbau und Erweiterung des Baumarktes in Boppard mit Errichtung einer neuen Türen- und Fliesenausstellung.' },
-    { year: '2009', text: 'Ab 1. Januar 2009 firmiert die Firma unter Bauzentrum Retzmann GmbH.' },
-    { year: 'Heute', text: 'Beschäftigt das Unternehmen 14 Mitarbeiter. Es verfügt über einen eigenen Fuhrpark mit modernsten Kranfahrzeugen.' }
-  ];
-
-  const departmentImages = {
-    "Trockenbau": "https://images.unsplash.com/photo-1581094794329-cd136ce4dad5?q=80&w=2600&auto=format&fit=crop", 
-    "Bauelemente": "https://www.retzmann-bauzentrum.de/fileadmin/user_upload/Retzmann/seiten/Ausstellungen/Bauelemente_1.jpg", 
-    "Baufachmarkt": "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=2670&auto=format&fit=crop", 
-    "Fliesen & Sanitär": "https://www.retzmann-bauzentrum.de/fileadmin/user_upload/Retzmann/seiten/Ausstellungen/Ausstellungen_neu/Fliesen_1.png", 
-    "Aussenanlage": "https://www.retzmann-bauzentrum.de/fileadmin/_processed_/3/9/csm_JASTO_4_85f559df99.jpg", 
-    "Putze & WDVS": "https://images.unsplash.com/photo-1628744876497-eb30460be9f6?q=80&w=2670&auto=format&fit=crop", 
-    "Dach & Fassade": "https://images.unsplash.com/photo-1632759145351-1d592919f522?q=80&w=2670&auto=format&fit=crop", 
-    "Roh- & Hochbau": "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=2670&auto=format&fit=crop", 
-    "Tiefbau": "https://images.unsplash.com/photo-1590486803833-1c5dc8ce8420?q=80&w=2670&auto=format&fit=crop"
+  // --- RENDER HELPERS ---
+  const handleImageError = (e) => {
+    e.target.src = "https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=2689&auto=format&fit=crop";
+    e.target.alt = "Platzhalter Bild";
   };
 
   const departments = [
-    { title: "Trockenbau", icon: Home, image: departmentImages["Trockenbau"], action: () => navigateTo('trockenbau') },
-    { title: "Bauelemente", icon: Star, image: departmentImages["Bauelemente"], action: () => navigateTo('home') }, 
-    { title: "Baufachmarkt", icon: Hammer, image: departmentImages["Baufachmarkt"], action: () => navigateTo('home') },
-    { title: "Fliesen & Sanitär", icon: CheckCircle2, image: departmentImages["Fliesen & Sanitär"], action: () => navigateTo('home') },
-    { title: "Aussenanlage", icon: Leaf, image: departmentImages["Aussenanlage"], action: () => navigateTo('home') },
-    { title: "Putze & WDVS", icon: Layers, image: departmentImages["Putze & WDVS"], action: () => navigateTo('home') },
-    { title: "Dach & Fassade", icon: Home, image: departmentImages["Dach & Fassade"], action: () => navigateTo('home') },
-    { title: "Roh- & Hochbau", icon: Home, image: departmentImages["Roh- & Hochbau"], action: () => navigateTo('home') },
-    { title: "Tiefbau", icon: Truck, image: departmentImages["Tiefbau"], action: () => navigateTo('home') }
+    { title: "Trockenbau", icon: Home, image: "https://images.unsplash.com/photo-1581094794329-cd136ce4dad5?q=80&w=2600&auto=format&fit=crop", action: () => navigateTo('trockenbau') },
+    { title: "Bauelemente", icon: Star, image: "https://www.retzmann-bauzentrum.de/fileadmin/user_upload/Retzmann/seiten/Ausstellungen/Bauelemente_1.jpg", action: () => navigateTo('home') },
+    { title: "Baufachmarkt", icon: Hammer, image: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=2670&auto=format&fit=crop", action: () => navigateTo('home') },
+    { title: "Fliesen & Sanitär", icon: CheckCircle2, image: "https://www.retzmann-bauzentrum.de/fileadmin/user_upload/Retzmann/seiten/Ausstellungen/Ausstellungen_neu/Fliesen_1.png", action: () => navigateTo('home') },
+    { title: "Aussenanlage", icon: Leaf, image: "https://www.retzmann-bauzentrum.de/fileadmin/_processed_/3/9/csm_JASTO_4_85f559df99.jpg", action: () => navigateTo('home') },
+    { title: "Putze & WDVS", icon: Layers, image: "https://images.unsplash.com/photo-1628744876497-eb30460be9f6?q=80&w=2670&auto=format&fit=crop", action: () => navigateTo('home') },
+    { title: "Dach & Fassade", icon: Home, image: "https://images.unsplash.com/photo-1632759145351-1d592919f522?q=80&w=2670&auto=format&fit=crop", action: () => navigateTo('home') },
+    { title: "Roh- & Hochbau", icon: Home, image: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=2670&auto=format&fit=crop", action: () => navigateTo('home') },
+    { title: "Tiefbau", icon: Truck, image: "https://images.unsplash.com/photo-1590486803833-1c5dc8ce8420?q=80&w=2670&auto=format&fit=crop", action: () => navigateTo('home') }
   ];
 
   const contactsData = {
-    "Zentrale": [
-      { name: "Sabine Christmann", phone: "(06747) 9343-22", fax: "(06747) 9343-20", email: "s.christmann@retzmann-bauzentrum.de" }
-    ],
-    "Baufachmarkt": [
-      { name: "Theo Muders", phone: "(06747) 9343-26", fax: "(06747) 9343-20", email: "t.muders@retzmann-bauzentrum.de" },
-      { name: "Thomas Fuchs", phone: "06747/9343-19", fax: "06747/9343-20", email: "t.fuchs@retzmann-bauzentrum.de" }
-    ],
-    "Trockenbau": [
-        { name: "Ralph Engel", phone: "(06747) 9343-15", fax: "(06747) 9343-20", email: "r.engel@retzmann-bauzentrum.de" },
-        { name: "Michael Retzmann", phone: "(06747) 9343-17", fax: "(06747) 9343-24", email: "m.retzmann@retzmann-bauzentrum.de" },
-        { name: "Uwe Retzmann", phone: "(06747) 9343-11", fax: "(06747) 9343-20", email: "u.retzmann@retzmann-bauzentrum.de" }
-    ],
-     "Buchhaltung": [
-        { name: "Jennifer Barthel", phone: "(06747) 9343-10", email: "j.barthel@retzmann-bauzentrum.de" },
-        { name: "Anja Kasper", phone: "(06747) 9343-13", fax: "(06747) 9343-24", email: "a.kasper@retzmann-bauzentrum.de" }
-    ],
+    "Zentrale": [{ name: "Sabine Christmann", phone: "(06747) 9343-22", email: "s.christmann@retzmann-bauzentrum.de" }],
+    "Baufachmarkt": [{ name: "Theo Muders", phone: "(06747) 9343-26", email: "t.muders@retzmann-bauzentrum.de" }],
+    "Trockenbau": [{ name: "Ralph Engel", phone: "(06747) 9343-15", email: "r.engel@retzmann-bauzentrum.de" }],
+    "Buchhaltung": [{ name: "Jennifer Barthel", phone: "(06747) 9343-10", email: "j.barthel@retzmann-bauzentrum.de" }]
   };
 
+  const historyData = [
+    { year: '1971', text: 'Entstehung als Niederlassung Mat. Kröll GmbH & Co.' },
+    { year: '1988', text: 'Eröffnung unseres Baufachmarktes in Boppard.' },
+    { year: '2009', text: 'Umfirmierung zur Bauzentrum Retzmann GmbH.' },
+    { year: 'Heute', text: '14 Mitarbeiter, eigener Fuhrpark mit Kranfahrzeugen.' }
+  ];
+
   const exhibitions = {
-    "Garten": [
-        "https://www.retzmann-bauzentrum.de/fileadmin/_processed_/3/9/csm_JASTO_4_85f559df99.jpg",
-        "https://www.retzmann-bauzentrum.de/fileadmin/_processed_/2/c/csm_JASTO_5_e180433b18.jpg",
-        "https://www.retzmann-bauzentrum.de/fileadmin/_processed_/6/9/csm_JASTO_1_e2489a3c24.jpg",
-        "https://www.retzmann-bauzentrum.de/fileadmin/_processed_/4/f/csm_JASTO_2_2502e72d30.jpg",
-        "https://www.retzmann-bauzentrum.de/fileadmin/_processed_/5/3/csm_JASTO_3_ea721b8be9.jpg",
-        "https://www.retzmann-bauzentrum.de/fileadmin/_processed_/4/f/csm_EHL_fdccfea52d.jpg"
-    ],
-    "Fliesen & Sanitär": [
-        "https://www.retzmann-bauzentrum.de/fileadmin/user_upload/Retzmann/seiten/Ausstellungen/Ausstellungen_neu/Fliesen_1.png",
-        "https://www.retzmann-bauzentrum.de/fileadmin/user_upload/Retzmann/seiten/Ausstellungen/Ausstellungen_neu/Fliesen_2.png"
-    ],
-    "Bodenbeläge": [
-        "https://www.retzmann-bauzentrum.de/fileadmin/user_upload/Retzmann/seiten/Ausstellungen/Ausstellungen_neu/Laminat.png",
-        "https://www.retzmann-bauzentrum.de/fileadmin/user_upload/Retzmann/seiten/Ausstellungen/Ausstellungen_neu/Leisten.png"
-    ],
-    "Bauelemente": [
-        "https://www.retzmann-bauzentrum.de/fileadmin/user_upload/Retzmann/seiten/Ausstellungen/Bauelemente_1.jpg",
-        "https://www.retzmann-bauzentrum.de/fileadmin/user_upload/Retzmann/seiten/Ausstellungen/Bauelemente_2.jpg",
-        "https://www.retzmann-bauzentrum.de/fileadmin/user_upload/Retzmann/seiten/Ausstellungen/Bauelemente_3.jpg",
-        "https://www.retzmann-bauzentrum.de/fileadmin/user_upload/Retzmann/seiten/Ausstellungen/Bauelemente_4.jpg"
-    ]
+    "Garten": ["https://www.retzmann-bauzentrum.de/fileadmin/_processed_/3/9/csm_JASTO_4_85f559df99.jpg", "https://www.retzmann-bauzentrum.de/fileadmin/_processed_/2/c/csm_JASTO_5_e180433b18.jpg"],
+    "Fliesen": ["https://www.retzmann-bauzentrum.de/fileadmin/user_upload/Retzmann/seiten/Ausstellungen/Ausstellungen_neu/Fliesen_1.png", "https://www.retzmann-bauzentrum.de/fileadmin/user_upload/Retzmann/seiten/Ausstellungen/Ausstellungen_neu/Fliesen_2.png"]
   };
 
   const guidesData = [
-    {
-      title: "Gartenmöbel",
-      desc: "Welche Gartenmöbel verwandeln Ihren Garten in ein Wohnzimmer im Grünen? Mit unseren Tipps machen Sie sich bereit für entspannte Stunden unter freiem Himmel.",
-      img: "https://api.eurobaustoff.de/cgi-bin/infomam_ws/services/rs2/cs/csimg?mid=20230321.8334b61c-4d33-4aa6-a914-764a70cdca3d&format=21%3A9&w=800"
-    },
-    {
-      title: "Pools & Co.",
-      desc: "Ein Pool ist wie ein Freibad zu Hause – nur besser. Ob die Regeln von dort allerdings auch daheim gelten sollten und wie Kinder unbeaufsichtigt toben können, verraten wir Ihnen hier.",
-      img: "https://api.eurobaustoff.de/cgi-bin/infomam_ws/services/rs2/cs/csimg?mid=20230321.8334b61c-4d33-4aa6-a914-764af0003557&format=21%3A9&w=800"
-    },
-    {
-      title: "Licht im Garten",
-      desc: "Laue Sommerabende auf der Terrasse, romantische Lichtakzente im Garten. Von der Lichterkette bis zur stylishen Wegleuchte: Hier kommen unsere Tipps für die perfekte Beleuchtung.",
-      img: "https://api.eurobaustoff.de/cgi-bin/infomam_ws/services/rs2/cs/csimg?mid=20230321.db6e552f-06ae-91b6-a914-464ba09e942e&format=21%3A9&w=800"
-    },
-    {
-      title: "Metallzäune",
-      desc: "Wissen Sie, wie hoch der Zaun zum Nachbarn sein darf? Außerdem haben wir Inspirationen und Ideen rund um die schönste Grenze der Welt zusammengetragen: Ihre Grundstücksgrenze.",
-      img: "https://api.eurobaustoff.de/cgi-bin/infomam_ws/services/rs2/cs/csimg?mid=20230321.b7700322-e77f-5d81-a914-764ab8010a28&format=21%3A9&w=800"
-    },
-    {
-      title: "Stein und Keramik",
-      desc: "Diesen Sommer werden Sie zum Star der Nachbarschaft – zum Beispiel mit unseren 5 schönsten Trends für Terrassenplatten oder wie Sie den neuen Trend XXL-Platten umsetzen.",
-      img: "https://api.eurobaustoff.de/cgi-bin/infomam_ws/services/rs2/cs/csimg?mid=20230321.9b13f7dd-3fda-9698-a914-754a68acc3ff&format=21%3A9&w=800"
-    },
-    {
-      title: "Gartenteich",
-      desc: "Der Gartenteich: Plätscherndes Glück auf Erden. Ob Filtergröße, Standort oder Reinigung – wir verraten wie Sie Ihren kleinen Fisch-Bewohnern ein schönes Zuhause schenken.",
-      img: "https://api.eurobaustoff.de/cgi-bin/infomam_ws/services/rs2/cs/csimg?mid=20230321.9b13f7dd-3fda-9698-a914-764a209db20d&format=21%3A9&w=800"
-    }
+    { title: "Gartenmöbel", desc: "Verwandeln Sie Ihren Garten in ein Wohnzimmer.", img: "https://api.eurobaustoff.de/cgi-bin/infomam_ws/services/rs2/cs/csimg?mid=20230321.8334b61c-4d33-4aa6-a914-764a70cdca3d&format=21%3A9&w=800" },
+    { title: "Pools & Co.", desc: "Ein Pool ist wie ein Freibad zu Hause – nur besser.", img: "https://api.eurobaustoff.de/cgi-bin/infomam_ws/services/rs2/cs/csimg?mid=20230321.8334b61c-4d33-4aa6-a914-764af0003557&format=21%3A9&w=800" },
+    { title: "Licht im Garten", desc: "Laue Sommerabende auf der Terrasse.", img: "https://api.eurobaustoff.de/cgi-bin/infomam_ws/services/rs2/cs/csimg?mid=20230321.db6e552f-06ae-91b6-a914-464ba09e942e&format=21%3A9&w=800" }
   ];
 
   const navStructure = [
     { title: "Start", action: () => navigateTo('home') },
-    { title: "Aktuelles", items: ["Angebote/Aktionen", "Restposten", "Neuigkeiten"] },
+    { title: "Aktuelles", items: ["Angebote", "Restposten", "Neuigkeiten"] },
     { title: "Fachabteilungen", items: departments.map(d => ({ name: d.title, action: d.action })) },
     { title: "Ausstellungen", action: () => navigateTo('ausstellungen') },
     { title: "Ratgeber", link: "#guides", action: () => scrollToSection('guides') },
-    { title: "Service & Beratung", items: ["Unsere Serviceleistungen", "Ansprechpartner", "Lieferservice", "Warenlager"] },
-    { title: "Über uns", items: ["Bauzentrum Retzmann", "Ihr Weg zu uns", "Öffnungszeiten"] }
+    { title: "Service", items: ["Serviceleistungen", "Ansprechpartner", "Lieferservice"] },
+    { title: "Über uns", items: ["Bauzentrum Retzmann", "Anfahrt", "Öffnungszeiten"] }
   ];
 
-  // Helper Component for Buttons
-  const CTAButton = ({ text, onClick, primary = true, className = "" }) => (
-    <button 
-      onClick={onClick}
-      className={`inline-flex items-center gap-2 px-8 py-3 rounded-sm text-lg font-bold transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 ${
-        primary 
-          ? `${theme.bg} text-white ${theme.bgHover} ${theme.shadow}` 
-          : `bg-white text-slate-900 border border-slate-200 hover:${theme.border} ${theme.textHover}`
-      } ${className}`}
-    >
-      {text}
-      <ArrowRight className="w-5 h-5" />
-    </button>
-  );
-
   return (
-    <div className={`font-sans text-slate-800 antialiased bg-white selection:bg-slate-100 selection:${theme.text}`}>
+    <div className={`font-sans text-slate-800 antialiased bg-white selection:bg-slate-100 selection:${theme.text} min-h-screen flex flex-col`}>
       
-      {/* === TOP BAR === */}
-      <div className="bg-slate-900 text-slate-300 py-2 text-xs md:text-sm hidden md:block">
+      {/* TOP BAR */}
+      <div className="bg-slate-900 text-slate-300 py-2 text-xs md:text-sm hidden md:block z-50">
         <div className="container mx-auto px-6 flex justify-between items-center">
-            <div className="flex gap-6">
-                <span className="flex items-center gap-2"><MapPin className={`w-4 h-4 ${theme.text}`} /> Halsenbach</span>
-                <span className="flex items-center gap-2"><Clock className={`w-4 h-4 ${theme.text}`} /> Mo-Fr 7:00-18:00</span>
-            </div>
-            <div className="flex gap-6 items-center">
-                <a href="mailto:info@retzmann-bauzentrum.de" className="hover:text-white transition-colors flex items-center gap-2">
-                    <Mail className="w-4 h-4" /> info@retzmann-bauzentrum.de
-                </a>
-                <a href="tel:+49674793430" className="hover:text-white transition-colors font-bold flex items-center gap-2">
-                    <Phone className="w-4 h-4" /> +49 6747 9343 - 0
-                </a>
-                <button 
-                  onClick={() => navigateTo('ansprechpartner')}
-                  className={`hidden lg:flex items-center gap-2 ${theme.bg} text-white px-3 py-1 rounded-sm text-xs font-bold ${theme.bgHover} transition-colors ml-4`}
-                >
-                    <MessageSquare className="w-3 h-3" /> Angebot anfragen
-                </button>
-            </div>
+           <div className="flex gap-6">
+              <span className="flex items-center gap-2"><MapPin className={`w-4 h-4 ${theme.text}`} /> Halsenbach</span>
+              <span className="flex items-center gap-2"><Clock className={`w-4 h-4 ${theme.text}`} /> Mo-Fr 7:00-18:00</span>
+           </div>
+           <div className="flex gap-6 items-center">
+              <a href="tel:+49674793430" className="hover:text-white font-bold flex items-center gap-2"><Phone className="w-4 h-4" /> +49 6747 9343 - 0</a>
+              <button onClick={() => navigateTo('ansprechpartner')} className={`hidden lg:flex items-center gap-2 ${theme.bg} text-white px-3 py-1 rounded-sm text-xs font-bold ${theme.bgHover} transition-colors ml-4`}>
+                 <MessageSquare className="w-3 h-3" /> Angebot anfragen
+              </button>
+           </div>
         </div>
       </div>
 
-      {/* === HEADER === */}
-      <header className={`fixed w-full z-50 transition-all duration-300 top-0 md:top-9 ${scrolled || isMenuOpen ? 'bg-white shadow-sm py-3' : 'bg-white/95 backdrop-blur-sm py-5'}`}>
+      {/* HEADER */}
+      <header className={`fixed w-full z-40 transition-all duration-300 ${scrolled ? 'top-0 bg-white shadow-md py-2' : 'md:top-9 top-0 bg-white/95 py-4'}`}>
         <div className="container mx-auto px-6 flex justify-between items-center relative">
-          
-          <div className="flex items-center gap-2 z-50 cursor-pointer" onClick={() => navigateTo('home')}>
-            <div className="bg-white px-4 py-2 rounded-full shadow-lg border border-slate-100 flex items-center gap-3 transform hover:scale-105 transition-transform duration-300">
-               <img src="https://www.retzmann-bauzentrum.de/fileadmin/user_upload/Retzmann/images/logo_small.png" alt="Bauzentrum Retzmann" className="h-8 md:h-10 object-contain" onError={handleImageError} />
-            </div>
+          <div className="flex items-center cursor-pointer" onClick={() => navigateTo('home')}>
+             <div className="bg-white px-4 py-2 rounded-full shadow-lg border border-slate-100">
+                <img src="https://www.retzmann-bauzentrum.de/fileadmin/user_upload/Retzmann/images/logo_small.png" alt="Logo" className="h-8 object-contain" onError={handleImageError} />
+             </div>
           </div>
 
+          {/* Desktop Nav */}
           <nav className="hidden xl:flex items-center gap-6">
-            <button onClick={() => navigateTo('home')} className={`text-sm font-bold text-slate-800 ${theme.textHover} transition-colors`}>Start</button>
-            
-            <div className="relative group">
-                <button className={`text-sm font-medium text-slate-600 group-hover:${theme.text} transition-colors flex items-center gap-1 py-4`}>
-                    Aktuelles <ChevronDown className="w-3 h-3" />
+             <button onClick={() => navigateTo('home')} className={`text-sm font-bold hover:${theme.text} transition-colors`}>Start</button>
+             
+             <div className="relative group">
+                <button className={`flex items-center gap-1 text-sm font-medium hover:${theme.text} py-4`}>
+                   Fachabteilungen <ChevronDown className="w-3 h-3" />
                 </button>
-                <div className={`absolute top-full left-0 bg-white shadow-xl border-t-2 ${theme.border} py-2 w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform translate-y-2 group-hover:translate-y-0`}>
-                    <button className={`block w-full text-left px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 ${theme.textHover}`}>Angebote/Aktionen</button>
-                    <button className={`block w-full text-left px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 ${theme.textHover}`}>Restposten</button>
-                    <button className={`block w-full text-left px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 ${theme.textHover}`}>Neuigkeiten</button>
+                <div className={`absolute top-full left-0 bg-white shadow-xl border-t-2 ${theme.border} py-2 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all`}>
+                   {departments.map((dept, i) => (
+                      <button key={i} onClick={dept.action} className={`block w-full text-left px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:${theme.text}`}>{dept.title}</button>
+                   ))}
                 </div>
-            </div>
-
-            <div className="relative group">
-                <button className={`text-sm font-medium text-slate-600 group-hover:${theme.text} transition-colors flex items-center gap-1 py-4`}>
-                    Fachabteilungen <ChevronDown className="w-3 h-3" />
-                </button>
-                <div className={`absolute top-full left-0 bg-white shadow-xl border-t-2 ${theme.border} py-2 w-56 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform translate-y-2 group-hover:translate-y-0`}>
-                    {departments.map((dept, i) => (
-                        <button key={i} onClick={dept.action} className={`block w-full text-left px-4 py-2 text-sm text-slate-600 hover:bg-slate-50 ${theme.textHover}`}>
-                          {dept.title}
-                        </button>
-                    ))}
-                </div>
-            </div>
-
-            <button onClick={() => navigateTo('ausstellungen')} className={`text-sm font-medium text-slate-600 ${theme.textHover} transition-colors`}>Ausstellungen</button>
-            <button onClick={() => scrollToSection('history')} className={`text-sm font-medium text-slate-600 ${theme.textHover} transition-colors`}>Über uns</button>
-
-            <button onClick={() => navigateTo('ansprechpartner')} className={`${theme.bg} ${theme.bgHover} text-white px-5 py-2.5 rounded-sm text-sm font-semibold transition-all shadow-lg ${theme.shadow} flex items-center gap-2`}>
-              <Phone className="w-4 h-4" />
-              Kontakt
-            </button>
-          </nav>
-
-          <div className="flex items-center gap-4">
-             <div className="relative z-50 hidden md:block">
-                <button 
-                    onClick={() => setShowThemePicker(!showThemePicker)}
-                    className="p-2 rounded-full hover:bg-slate-100 text-slate-600 transition-colors"
-                    title="Design anpassen"
-                >
-                    <Palette className="w-6 h-6" />
-                </button>
-                {showThemePicker && (
-                    <div className="absolute top-full right-0 mt-2 bg-white shadow-xl border border-slate-100 rounded-sm p-4 w-48 animate-in fade-in zoom-in-95 duration-200">
-                        <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Farbschema</p>
-                        <div className="flex gap-3 justify-between">
-                            <button onClick={() => {setThemeColor('red'); setShowThemePicker(false)}} className="w-8 h-8 rounded-full bg-red-600 hover:scale-110 transition-transform ring-2 ring-transparent focus:ring-red-300"></button>
-                            <button onClick={() => {setThemeColor('blue'); setShowThemePicker(false)}} className="w-8 h-8 rounded-full bg-blue-600 hover:scale-110 transition-transform ring-2 ring-transparent focus:ring-blue-300"></button>
-                            <button onClick={() => {setThemeColor('green'); setShowThemePicker(false)}} className="w-8 h-8 rounded-full bg-emerald-600 hover:scale-110 transition-transform ring-2 ring-transparent focus:ring-emerald-300"></button>
-                        </div>
-                    </div>
-                )}
              </div>
 
-             <button 
-                onClick={() => setIsMenuOpen(!isMenuOpen)} 
-                className="xl:hidden text-slate-800 z-50 relative p-2 hover:bg-slate-100 rounded-sm transition-colors"
-             >
-                {isMenuOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
+             <button onClick={() => navigateTo('ausstellungen')} className={`text-sm font-medium hover:${theme.text} transition-colors`}>Ausstellungen</button>
+             <button onClick={() => scrollToSection('history')} className={`text-sm font-medium hover:${theme.text} transition-colors`}>Über uns</button>
+             <button onClick={() => navigateTo('ansprechpartner')} className={`${theme.bg} ${theme.bgHover} text-white px-5 py-2 rounded-sm text-sm font-bold shadow-lg flex items-center gap-2`}>
+                <Phone className="w-4 h-4" /> Kontakt
              </button>
+          </nav>
+
+          {/* Mobile Toggle & Theme */}
+          <div className="flex items-center gap-4">
+             <div className="relative hidden md:block">
+                <button onClick={() => setShowThemePicker(!showThemePicker)} className="p-2 hover:bg-slate-100 rounded-full"><Palette className="w-5 h-5 text-slate-600" /></button>
+                {showThemePicker && (
+                   <div className="absolute top-full right-0 mt-2 bg-white shadow-xl border border-slate-100 p-3 flex gap-2 rounded-sm">
+                      <button onClick={() => setThemeColor('red')} className="w-6 h-6 rounded-full bg-red-600"></button>
+                      <button onClick={() => setThemeColor('blue')} className="w-6 h-6 rounded-full bg-blue-600"></button>
+                      <button onClick={() => setThemeColor('green')} className="w-6 h-6 rounded-full bg-emerald-600"></button>
+                   </div>
+                )}
+             </div>
+             <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="xl:hidden p-2"><Menu className="w-8 h-8 text-slate-800" /></button>
           </div>
         </div>
 
-        {/* MOBILE DRAWER */}
-        <div 
-            className={`absolute top-full left-0 w-full bg-white border-b border-slate-200 shadow-2xl transition-all duration-300 ease-in-out overflow-hidden ${
-                isMenuOpen ? 'max-h-[90vh] opacity-100 visible' : 'max-h-0 opacity-0 invisible'
-            }`}
-        >
-            <div className="container mx-auto px-6 py-6 overflow-y-auto max-h-[85vh]">
-                <div className="flex flex-col gap-1">
-                    {navStructure.map((item, index) => (
-                        <div key={index} className="border-b border-slate-100 last:border-0">
-                            {item.items ? (
-                                <div>
-                                    <button 
-                                        onClick={() => toggleMobileSubmenu(index)}
-                                        className={`flex justify-between items-center w-full py-4 text-left font-bold text-slate-800 ${theme.textHover} transition-colors`}
-                                    >
-                                        <span className="text-lg">{item.title}</span>
-                                        <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform duration-300 ${mobileSubmenu === index ? `rotate-180 ${theme.text}` : ''}`} />
-                                    </button>
-                                    <div className={`overflow-hidden transition-all duration-300 ease-in-out ${mobileSubmenu === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
-                                        <div className={`flex flex-col gap-3 pb-6 pl-4 border-l-2 ${theme.borderLight} ml-2`}>
-                                            {item.items.map((subItem, subIndex) => (
-                                                <button 
-                                                    key={subIndex} 
-                                                    onClick={() => {
-                                                      if(subItem.action) subItem.action();
-                                                      else if(typeof subItem === 'string' && subItem === "Trockenbau") navigateTo('trockenbau');
-                                                      else navigateTo('home');
-                                                    }}
-                                                    className={`text-slate-600 ${theme.textHover} text-base font-medium block transition-colors py-1 text-left w-full`}
-                                                >
-                                                    {typeof subItem === 'string' ? subItem : subItem.name}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-                            ) : (
-                                <button 
-                                    onClick={() => { if(item.action) item.action(); }}
-                                    className={`block w-full text-left py-4 text-lg font-bold text-slate-800 ${theme.textHover} transition-colors`}
-                                >
-                                    {item.title}
-                                </button>
-                            )}
-                        </div>
-                    ))}
-                    <div className="mt-8">
-                        <button 
-                          onClick={() => navigateTo('ansprechpartner')}
-                          className={`${theme.bg} text-white w-full py-3 rounded-sm text-center font-bold text-base flex items-center justify-center gap-2 ${theme.bgHover} transition-colors`}
-                        >
-                            <Phone className="w-4 h-4" /> Jetzt anrufen
-                        </button>
-                    </div>
-                </div>
-            </div>
+        {/* Mobile Menu Drawer */}
+        <div className={`absolute top-full left-0 w-full bg-white shadow-xl transition-all duration-300 overflow-hidden ${isMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'}`}>
+           <div className="container px-6 py-6 flex flex-col gap-4">
+              {navStructure.map((item, i) => (
+                 <div key={i} className="border-b border-slate-100 pb-2">
+                    <div className="font-bold text-lg mb-2" onClick={() => { if(item.action) item.action(); setMobileSubmenu(mobileSubmenu === i ? null : i); }}>{item.title}</div>
+                    {item.items && mobileSubmenu === i && (
+                       <div className="pl-4 flex flex-col gap-2">
+                          {item.items.map((sub, j) => (
+                             <button key={j} className="text-left text-slate-600 py-1" onClick={() => { 
+                                if(typeof sub === 'object') sub.action(); 
+                                else if(sub === "Trockenbau") navigateTo('trockenbau');
+                                else navigateTo('home');
+                             }}>{typeof sub === 'string' ? sub : sub.name}</button>
+                          ))}
+                       </div>
+                    )}
+                 </div>
+              ))}
+           </div>
         </div>
       </header>
 
-      {/* ======================= VIEW: HOME ======================= */}
-      {currentView === 'home' && (
-        <div className="animate-in fade-in duration-500">
-          
-          <section id="start" className="relative h-[85vh] min-h-[600px] flex items-center justify-center overflow-hidden bg-slate-900 mt-16 md:mt-24 group scroll-mt-40">
-            {heroSlides.map((slide, index) => (
-                <div 
-                    key={index}
-                    className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === currentHeroSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
-                >
-                    <img 
-                        src={slide.image} 
-                        alt={slide.title} 
-                        className="w-full h-full object-cover opacity-60"
-                        onError={handleImageError}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent"></div>
+      {/* === CONTENT VIEWS === */}
+      <main className="flex-grow pt-24">
+        
+        {/* VIEW: HOME */}
+        {currentView === 'home' && (
+          <div className="animate-in fade-in duration-500">
+             {/* HERO */}
+             <section className="relative h-[600px] flex items-center justify-center bg-slate-900 overflow-hidden group">
+                <div className="absolute inset-0">
+                   <img src={heroSlides[currentHeroSlide].image} className="w-full h-full object-cover opacity-60 transition-opacity duration-1000" onError={handleImageError} />
+                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
                 </div>
-            ))}
-            <button onClick={() => setCurrentHeroSlide((prev) => (prev === 0 ? heroSlides.length - 1 : prev - 1))} className="absolute left-4 z-30 p-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white transition-all transform hover:scale-110 hidden md:block">
-                <ChevronLeft className="w-8 h-8" />
-            </button>
-            <button onClick={() => setCurrentHeroSlide((prev) => (prev + 1) % heroSlides.length)} className="absolute right-4 z-30 p-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white transition-all transform hover:scale-110 hidden md:block">
-                <ChevronRight className="w-8 h-8" />
-            </button>
-            <div className="container mx-auto px-6 relative z-20 text-center pt-10">
-              <div className="max-w-4xl mx-auto">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-white/90 text-xs font-semibold mb-6 backdrop-blur-sm">
-                  <Star className={`w-3 h-3 ${theme.text} ${theme.fill}`} />
-                  i&M Bauzentrum Partner
-                </div>
-                <h1 className="text-5xl md:text-7xl font-bold text-white leading-tight mb-6 tracking-tight drop-shadow-lg">
-                  {heroSlides[currentHeroSlide].title.split('. ').map((part, i) => (
-                      <span key={i} className="block">
-                          {i === 1 ? <span className={`text-transparent bg-clip-text bg-gradient-to-r ${theme.from} to-white`}>{part}</span> : part + (i === 0 && heroSlides[currentHeroSlide].title.includes('.') ? '.' : '')}
-                      </span>
-                  ))}
-                </h1>
-                <p className="text-xl md:text-2xl text-white font-medium mb-10 max-w-2xl mx-auto leading-relaxed drop-shadow-md bg-slate-900/30 backdrop-blur-sm p-4 rounded-sm border border-white/10 inline-block">
-                  {heroSlides[currentHeroSlide].subtitle}
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <CTAButton text="Jetzt Kontakt aufnehmen" onClick={() => navigateTo('ansprechpartner')} />
-                  <button onClick={() => scrollToSection('history')} className="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 text-white px-8 py-3 rounded-sm text-lg font-semibold transition-all flex items-center justify-center gap-2">
-                    Unsere Geschichte
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce hidden md:block text-white/50 z-20"><ChevronDown className="w-8 h-8" /></div>
-          </section>
+                
+                <button onClick={prevHeroSlide} className="absolute left-4 z-10 p-2 bg-white/10 hover:bg-white/20 text-white rounded-full hidden md:block"><ChevronLeft className="w-8 h-8" /></button>
+                <button onClick={nextHeroSlide} className="absolute right-4 z-10 p-2 bg-white/10 hover:bg-white/20 text-white rounded-full hidden md:block"><ChevronRight className="w-8 h-8" /></button>
 
-          <section id="departments" className="py-24 bg-white relative scroll-mt-32">
-            <div className="container mx-auto px-6">
-              <div className="text-center max-w-3xl mx-auto mb-16">
-                <h2 className={`${theme.text} font-bold tracking-wider uppercase text-sm mb-3`}>Alles für Ihr Projekt</h2>
-                <h3 className="text-3xl md:text-5xl font-bold text-slate-900 mb-6">Unsere Fachabteilungen</h3>
-                <p className="text-slate-600 text-lg">Kompetente Beratung und hochwertige Baustoffe.</p>
-              </div>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-                {departments.map((dept, index) => {
-                    const Icon = dept.icon;
-                    return (
-                        <div key={index} onClick={dept.action} className="group relative h-64 md:h-80 rounded-sm overflow-hidden hover:shadow-2xl transition-all duration-500 cursor-pointer">
-                            <div className="absolute inset-0">
-                                <img src={dept.image} alt={dept.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onError={handleImageError} />
-                                <div className="absolute inset-0 bg-slate-900/40 group-hover:bg-slate-900/30 transition-colors"></div>
-                                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 to-transparent"></div>
+                <div className="relative z-10 text-center px-6 max-w-4xl">
+                   <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-white text-xs font-bold mb-6 backdrop-blur-sm`}>
+                      <Star className={`w-3 h-3 ${theme.text} fill-current`} /> i&M Bauzentrum Partner
+                   </div>
+                   <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 drop-shadow-xl">{heroSlides[currentHeroSlide].title}</h1>
+                   <p className="text-xl text-white/90 mb-10 max-w-2xl mx-auto">{heroSlides[currentHeroSlide].subtitle}</p>
+                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                      <button onClick={() => navigateTo('ansprechpartner')} className={`${theme.bg} ${theme.bgHover} text-white px-8 py-3 rounded-sm font-bold shadow-lg flex items-center justify-center gap-2`}>Jetzt Kontakt aufnehmen <ArrowRight className="w-5 h-5"/></button>
+                      <button onClick={() => scrollToSection('history')} className="bg-white/10 border border-white/30 hover:bg-white/20 text-white px-8 py-3 rounded-sm font-bold backdrop-blur-sm">Unsere Geschichte</button>
+                   </div>
+                </div>
+             </section>
+
+             {/* DEPARTMENTS TEASER */}
+             <section className="py-24 bg-white">
+                <div className="container mx-auto px-6">
+                   <div className="text-center mb-16">
+                      <h2 className={`${theme.text} font-bold tracking-wider uppercase text-sm mb-2`}>Alles für Ihr Projekt</h2>
+                      <h3 className="text-4xl font-bold text-slate-900">Unsere Fachabteilungen</h3>
+                   </div>
+                   <div className="grid md:grid-cols-3 gap-8">
+                      {departments.slice(0,6).map((dept, i) => (
+                         <div key={i} onClick={dept.action} className="group relative h-64 rounded-sm overflow-hidden cursor-pointer shadow-md hover:shadow-xl transition-all">
+                            <img src={dept.image} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onError={handleImageError} />
+                            <div className="absolute inset-0 bg-slate-900/40 group-hover:bg-slate-900/20 transition-colors"></div>
+                            <div className="absolute bottom-0 left-0 w-full p-6">
+                               <div className="flex items-center gap-3">
+                                  <div className={`p-2 ${theme.bg} rounded-sm text-white`}><dept.icon className="w-5 h-5" /></div>
+                                  <h4 className="text-xl font-bold text-white">{dept.title}</h4>
+                               </div>
                             </div>
-                            <div className="absolute bottom-0 left-0 w-full p-8">
-                                <div className="flex items-center gap-3 mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                                    <div className={`w-10 h-10 ${theme.bg} rounded-sm flex items-center justify-center shrink-0`}>
-                                        <Icon className="w-5 h-5 text-white" />
-                                    </div>
-                                    <h4 className="text-2xl font-bold text-white">{dept.title}</h4>
-                                </div>
-                                <div className="h-0 group-hover:h-auto overflow-hidden transition-all duration-300 opacity-0 group-hover:opacity-100">
-                                    <span className={`inline-flex items-center gap-2 ${theme.text} text-sm font-bold mt-4 uppercase tracking-wide`}>Sortiment ansehen <ArrowRight className="w-4 h-4" /></span>
-                                </div>
+                         </div>
+                      ))}
+                   </div>
+                </div>
+             </section>
+
+             {/* GOOGLE REVIEWS */}
+             <section className="py-24 bg-slate-50 border-t border-slate-200">
+                <div className="container mx-auto px-6 text-center">
+                   <h2 className={`${theme.text} font-bold tracking-wider uppercase text-sm mb-4`}>Kundenstimmen</h2>
+                   <h3 className="text-4xl font-bold text-slate-900 mb-8">Was unsere Kunden sagen</h3>
+                   <div className="flex justify-center gap-1 text-yellow-500 mb-2">
+                      {[1,2,3,4,5].map(i => <Star key={i} className="w-6 h-6 fill-current" />)}
+                   </div>
+                   <p className="text-slate-600 font-bold mb-12">4,4 von 5 Sternen auf Google (138 Rezensionen)</p>
+                   
+                   <div className="grid md:grid-cols-3 gap-8 mb-12 text-left">
+                      <div className="bg-white p-8 rounded-sm shadow-sm relative">
+                         <Quote className="absolute top-4 left-4 w-8 h-8 text-slate-100" />
+                         <p className="text-slate-600 italic mb-4 relative z-10">"Sehr zuvorkommend, freundlich, große Auswahl und gute Preise."</p>
+                         <p className="font-bold text-slate-900">- Google Nutzer</p>
+                      </div>
+                      <div className="bg-white p-8 rounded-sm shadow-sm relative">
+                         <Quote className="absolute top-4 left-4 w-8 h-8 text-slate-100" />
+                         <p className="text-slate-600 italic mb-4 relative z-10">"Kompetente Beratung und schnelle Lieferung. Genau der richtige Partner."</p>
+                         <p className="font-bold text-slate-900">- Stammkunde</p>
+                      </div>
+                      <div className="bg-white p-8 rounded-sm shadow-sm relative">
+                         <Quote className="absolute top-4 left-4 w-8 h-8 text-slate-100" />
+                         <p className="text-slate-600 italic mb-4 relative z-10">"Top Service im Lager. Hilfsbereit beim Beladen."</p>
+                         <p className="font-bold text-slate-900">- Handwerksbetrieb Müller</p>
+                      </div>
+                   </div>
+                   <a href="https://www.google.com/search?q=Bauzentrum+Retzmann+GmbH+Rezensionen" target="_blank" rel="noopener noreferrer" className={`inline-flex items-center gap-2 ${theme.bg} text-white px-8 py-3 rounded-sm font-bold shadow-lg ${theme.bgHover}`}>
+                      <Star className="w-5 h-5" /> Bewertung schreiben
+                   </a>
+                </div>
+             </section>
+
+             {/* HISTORY */}
+             <section id="history" className="py-24 bg-white scroll-mt-24">
+                <div className="container mx-auto px-6">
+                   <div className="flex flex-col lg:flex-row gap-16">
+                      <div className="lg:w-1/3">
+                         <h2 className={`${theme.text} font-bold uppercase text-sm mb-4`}>Über uns</h2>
+                         <h3 className="text-4xl font-bold text-slate-900 mb-6">Wachstum durch <span className={theme.text}>Beständigkeit.</span></h3>
+                         <p className="text-slate-600 mb-8 text-lg">Was 1971 als Niederlassung begann, ist heute ein fester Bestandteil der regionalen Bauwirtschaft.</p>
+                         <button onClick={() => navigateTo('ansprechpartner')} className={`w-full ${theme.bg} text-white py-3 rounded-sm font-bold shadow-md ${theme.bgHover}`}>Zum Team</button>
+                      </div>
+                      <div className="lg:w-2/3 border-l-2 border-slate-100 pl-8 space-y-12">
+                         {historyData.map((item, i) => (
+                            <div key={i} className="relative">
+                               <div className={`absolute -left-[41px] top-1 w-5 h-5 rounded-full border-4 border-white bg-slate-300`}></div>
+                               <span className={`text-2xl font-bold ${theme.text} block mb-2`}>{item.year}</span>
+                               <p className="text-slate-600">{item.text}</p>
                             </div>
-                        </div>
-                    );
-                })}
+                         ))}
+                      </div>
+                   </div>
+                </div>
+             </section>
+          </div>
+        )}
+
+        {/* VIEW: TROCKENBAU */}
+        {currentView === 'trockenbau' && (
+           <div className="animate-in slide-in-from-bottom-4 duration-500">
+              <div className="bg-slate-900 py-24 text-center">
+                 <h1 className="text-5xl font-bold text-white mb-4">Trockenbau</h1>
+                 <p className="text-slate-300 text-xl">Lösungen für Wand, Decke & Boden.</p>
               </div>
-              <div className="text-center"><CTAButton text="Fachberatung anfordern" onClick={() => navigateTo('ansprechpartner')} primary={false} /></div>
-            </div>
-          </section>
-
-          <section id="reviews" className="py-24 bg-slate-50 border-t border-slate-200 scroll-mt-32">
-            <div className="container mx-auto px-6">
-                <div className="text-center max-w-3xl mx-auto mb-16">
-                    <h2 className={`${theme.text} font-bold tracking-wider uppercase text-sm mb-3`}>Kundenstimmen</h2>
-                    <h3 className="text-3xl md:text-5xl font-bold text-slate-900 mb-6">Was unsere Kunden sagen</h3>
-                    <div className="flex items-center justify-center gap-2 text-yellow-500 mb-4">
-                        {[1,2,3,4].map(i => <Star key={i} className="w-6 h-6 fill-yellow-500" />)}
-                        <Star className="w-6 h-6 fill-yellow-500 text-yellow-500" />
-                        <span className="text-slate-700 font-bold ml-2">4,4 von 5 (138 Rezensionen)</span>
-                    </div>
-                </div>
-                <div className="grid md:grid-cols-3 gap-8 mb-12">
-                    <div className="bg-white p-8 rounded-sm shadow-sm relative">
-                        <Quote className={`absolute top-6 left-6 w-8 h-8 ${theme.text} opacity-20`} />
-                        <div className="flex gap-1 mb-4 text-yellow-500"><Star className="w-4 h-4 fill-current"/><Star className="w-4 h-4 fill-current"/><Star className="w-4 h-4 fill-current"/><Star className="w-4 h-4 fill-current"/><Star className="w-4 h-4 fill-current"/></div>
-                        <p className="text-slate-600 mb-6 italic relative z-10">"Sehr zuvorkommend, freundlich, große Auswahl und gute Preise."</p>
-                        <p className="font-bold text-slate-900">- Google Nutzer</p>
-                    </div>
-                    <div className="bg-white p-8 rounded-sm shadow-sm relative">
-                        <Quote className={`absolute top-6 left-6 w-8 h-8 ${theme.text} opacity-20`} />
-                        <div className="flex gap-1 mb-4 text-yellow-500"><Star className="w-4 h-4 fill-current"/><Star className="w-4 h-4 fill-current"/><Star className="w-4 h-4 fill-current"/><Star className="w-4 h-4 fill-current"/><Star className="w-4 h-4 fill-current"/></div>
-                        <p className="text-slate-600 mb-6 italic relative z-10">"Kompetente Beratung und schnelle Lieferung. Für mein Bauvorhaben genau der richtige Partner."</p>
-                        <p className="font-bold text-slate-900">- Stammkunde</p>
-                    </div>
-                    <div className="bg-white p-8 rounded-sm shadow-sm relative">
-                        <Quote className={`absolute top-6 left-6 w-8 h-8 ${theme.text} opacity-20`} />
-                        <div className="flex gap-1 mb-4 text-yellow-500"><Star className="w-4 h-4 fill-current"/><Star className="w-4 h-4 fill-current"/><Star className="w-4 h-4 fill-current"/><Star className="w-4 h-4 fill-current"/><Star className="w-4 h-4 fill-slate-200"/></div>
-                        <p className="text-slate-600 mb-6 italic relative z-10">"Großes Sortiment und das Personal im Lager hilft immer gerne beim Beladen. Top Service."</p>
-                        <p className="font-bold text-slate-900">- Handwerksbetrieb Müller</p>
-                    </div>
-                </div>
-                <div className="text-center">
-                    <a href="https://www.google.com/search?client=firefox-b-d&hs=XRw9&sa=X&sca_esv=af25f58d0793347a&biw=1696&bih=816&aic=0&sxsrf=ANbL-n4epvi7fOPCBcYOZ21_NCDXX-l-kQ:1769995414951&q=Bauzentrum+Retzmann+GmbH+Rezensionen&rflfq=1&num=20&stick=H4sIAAAAAAAAAONgkxI2MTK0MLOwMDI0NbY0NDE0A7I2MDK-YlRxSiytSs0rKSrNVQhKLanKTczLU3DPTfIA8oDixZn5eal5i1iJUgYAiHk6T2gAAAA&rldimm=4218688215391416821&tbm=lcl&hl=de-DE&ved=2ahUKEwiigNnf0rmSAxWxBdsEHUgpEFwQ9fQKegQIRBAG#lkt=LocalPoiReviews" target="_blank" rel="noopener noreferrer" className={`inline-flex items-center gap-2 ${theme.bg} text-white px-8 py-3 rounded-sm text-lg font-bold transition-all shadow-lg hover:shadow-xl ${theme.bgHover}`}>
-                        <Star className="w-5 h-5" /> Bewertung schreiben
-                    </a>
-                </div>
-            </div>
-          </section>
-
-          <section id="history" className="py-24 bg-white border-t border-slate-200 scroll-mt-32">
-            <div className="container mx-auto px-6">
-                <div className="flex flex-col lg:flex-row gap-16">
-                    <div className="lg:w-1/3 lg:sticky lg:top-32 h-fit">
-                        <h2 className={`${theme.text} font-bold tracking-wider uppercase text-sm mb-3`}>Über uns</h2>
-                        <h3 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6 leading-tight">Wachstum durch <span className={theme.text}>Beständigkeit.</span></h3>
-                        <p className="text-slate-600 mb-6 leading-relaxed text-lg">Was 1971 als Niederlassung begann, ist heute ein fester Bestandteil der regionalen Bauwirtschaft. Wir blicken stolz auf unsere Entwicklung zurück.</p>
-                        <CTAButton text="Jetzt Kontakt aufnehmen" onClick={() => navigateTo('ansprechpartner')} className="w-full justify-center" />
-                    </div>
-                    <div className="lg:w-2/3">
-                        <div className="border-l-2 border-slate-200 ml-4 md:ml-0 pl-8 space-y-16">
-                            {historyData.map((item, index) => (
-                                <div key={index} className="relative group">
-                                    <div className={`absolute -left-[41px] top-1 w-5 h-5 rounded-full border-4 border-white bg-slate-300 group-hover:${theme.bg} group-hover:scale-125 transition-all shadow-sm`}></div>
-                                    <div className="flex flex-col gap-3">
-                                        <span className={`text-3xl font-bold text-slate-300 group-hover:${theme.text} transition-colors font-mono`}>{item.year}</span>
-                                        <div className="bg-slate-50 p-8 rounded-sm shadow-sm border border-slate-100 group-hover:shadow-lg transition-all duration-300 group-hover:-translate-y-1">
-                                            <p className="text-slate-700 text-lg leading-relaxed">{item.text}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            </div>
-          </section>
-        </div>
-      )}
-
-      {/* ======================= VIEW: TROCKENBAU ======================= */}
-      {currentView === 'trockenbau' && (
-        <div className="animate-in slide-in-from-bottom-8 duration-500 mt-20">
-             <div className="bg-slate-900 py-24 text-center">
-                 <div className="container mx-auto px-6">
-                    <h1 className="text-5xl font-bold text-white mb-4">Trockenbau</h1>
-                    <p className="text-slate-300 text-xl max-w-2xl mx-auto">Raumbegrenzende und bauteilbekleidende Konstruktionen in trockener Bauweise für Wand, Decke & Boden.</p>
+              <div className="container mx-auto px-6 py-16 flex flex-col lg:flex-row gap-12">
+                 <div className="lg:w-1/2">
+                    <img src="https://images.unsplash.com/photo-1581094794329-cd136ce4dad5?q=80&w=2600" className="w-full rounded-sm shadow-xl" onError={handleImageError} />
                  </div>
-             </div>
-             <div className="container mx-auto px-6 py-16">
-                 <div className="flex flex-col lg:flex-row gap-12 items-start">
-                     <div className="lg:w-1/2">
-                         <img src="https://images.unsplash.com/photo-1581094794329-cd136ce4dad5?q=80&w=2600&auto=format&fit=crop" alt="Trockenbau" className="w-full rounded-sm shadow-xl" onError={handleImageError} />
-                     </div>
-                     <div className="lg:w-1/2">
-                         <h2 className={`text-3xl font-bold text-slate-900 mb-6 border-l-4 ${theme.border} pl-4`}>Unser Sortiment</h2>
-                         <p className="text-slate-600 mb-6 leading-relaxed">Profile, Gipsplatten, Gipsfaserplatten sowie das passende Zubehör sind aus dem modernen Innenausbau nicht mehr wegzudenken. Mit den Rigips Systemen treffen Sie eine kluge Entscheidung.</p>
-                         <ul className="space-y-3 mb-8">
-                             {["Brandschutz", "Rauchschutz", "Schallschutz", "Akustikdecken", "Technische Elemente", "Strahlenschutz"].map((item, i) => (
-                                 <li key={i} className="flex items-center gap-3 font-medium text-slate-800">
-                                     <CheckCircle2 className={`w-5 h-5 ${theme.text}`} /> {item}
-                                 </li>
-                             ))}
-                         </ul>
-                         <CTAButton text="Experten kontaktieren" onClick={() => navigateTo('ansprechpartner')} />
-                     </div>
+                 <div className="lg:w-1/2">
+                    <h2 className={`text-3xl font-bold text-slate-900 mb-6 border-l-4 ${theme.border} pl-4`}>Unser Sortiment</h2>
+                    <ul className="space-y-4 mb-8">
+                       {["Brandschutz", "Schallschutz", "Akustikdecken", "Technische Elemente"].map((item, i) => (
+                          <li key={i} className="flex items-center gap-3 font-medium text-slate-700"><CheckCircle2 className={`w-5 h-5 ${theme.text}`} /> {item}</li>
+                       ))}
+                    </ul>
+                    <button onClick={() => navigateTo('ansprechpartner')} className={`${theme.bg} text-white px-8 py-3 rounded-sm font-bold shadow-lg ${theme.bgHover}`}>Experten kontaktieren</button>
                  </div>
-             </div>
-        </div>
-      )}
+              </div>
+           </div>
+        )}
 
-      {/* ======================= VIEW: ANSPRECHPARTNER ======================= */}
-      {currentView === 'ansprechpartner' && (
-         <div className="animate-in slide-in-from-bottom-8 duration-500 mt-20">
-             <div className="bg-slate-900 py-24 text-center">
+        {/* VIEW: ANSPRECHPARTNER */}
+        {currentView === 'ansprechpartner' && (
+           <div className="animate-in slide-in-from-bottom-4 duration-500">
+              <div className="bg-slate-900 py-24 text-center">
                  <h1 className="text-5xl font-bold text-white mb-4">Ihre Ansprechpartner</h1>
-                 <p className="text-slate-300 text-xl">Kompetenz hat einen Namen. Finden Sie den richtigen Experten.</p>
-             </div>
-             <div className="container mx-auto px-6 py-16">
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {Object.entries(contactsData).map(([department, people]) => (
-                        <div key={department} className="bg-white rounded-sm p-8 border border-slate-200 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
-                            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
-                                 <div className={`p-3 ${theme.bg} rounded-full text-white`}>
-                                     <User className="w-6 h-6" />
-                                 </div>
-                                 <h4 className="font-bold text-2xl text-slate-800">{department}</h4>
-                            </div>
-                            <div className="space-y-8">
-                                {people.map((person, i) => (
-                                    <div key={i} className="group">
-                                        <p className="font-bold text-slate-900 text-lg mb-2">{person.name}</p>
-                                        <div className="text-sm text-slate-600 space-y-2">
-                                            <a href={`tel:${person.phone}`} className="flex items-center gap-3 hover:text-slate-900 transition-colors bg-slate-50 p-2 rounded-sm">
-                                                <Phone className={`w-4 h-4 ${theme.text}`} /> {person.phone}
-                                            </a>
-                                            {person.fax && (
-                                                <div className="flex items-center gap-3 text-slate-400 px-2">
-                                                    <Printer className="w-4 h-4" /> {person.fax}
-                                                </div>
-                                            )}
-                                            <a href={`mailto:${person.email}`} className={`flex items-center gap-3 ${theme.text} font-medium mt-1 break-all bg-red-50 p-2 rounded-sm hover:bg-red-100 transition-colors`}>
-                                                <Mail className="w-4 h-4" /> E-Mail senden
-                                            </a>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    ))}
-                </div>
-             </div>
-         </div>
-      )}
+                 <p className="text-slate-300 text-xl">Finden Sie den richtigen Experten.</p>
+              </div>
+              <div className="container mx-auto px-6 py-16 grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                 {Object.entries(contactsData).map(([dept, people]) => (
+                    <div key={dept} className="bg-white p-8 rounded-sm shadow-lg border border-slate-100">
+                       <h4 className="font-bold text-2xl text-slate-800 mb-6 pb-4 border-b border-slate-100">{dept}</h4>
+                       <div className="space-y-6">
+                          {people.map((p, i) => (
+                             <div key={i}>
+                                <p className="font-bold text-slate-900 text-lg">{p.name}</p>
+                                <a href={`tel:${p.phone}`} className="flex items-center gap-2 text-slate-600 hover:text-slate-900 mt-1"><Phone className="w-4 h-4"/> {p.phone}</a>
+                                <a href={`mailto:${p.email}`} className={`flex items-center gap-2 ${theme.text} mt-1 break-all`}><Mail className="w-4 h-4"/> E-Mail</a>
+                             </div>
+                          ))}
+                       </div>
+                    </div>
+                 ))}
+              </div>
+           </div>
+        )}
 
-      {/* ======================= VIEW: AUSSTELLUNGEN ======================= */}
-      {currentView === 'ausstellungen' && (
-          <div className="animate-in slide-in-from-bottom-8 duration-500 mt-20">
+        {/* VIEW: AUSSTELLUNGEN */}
+        {currentView === 'ausstellungen' && (
+           <div className="animate-in slide-in-from-bottom-4 duration-500">
               <div className="bg-slate-900 py-24 text-center">
                  <h1 className="text-5xl font-bold text-white mb-4">Unsere Ausstellungen</h1>
-                 <p className="text-slate-300 text-xl">Lassen Sie sich inspirieren in Halsenbach.</p>
-             </div>
-             <div className="container mx-auto px-6 py-16">
-                <div className="flex flex-wrap gap-4 mb-12 justify-center">
-                    {Object.keys(exhibitions).map((tab) => (
-                        <button key={tab} onClick={() => setActiveExhibitionTab(tab)} className={`px-8 py-3 rounded-full text-lg font-bold transition-all ${activeExhibitionTab === tab ? `${theme.bg} text-white shadow-lg` : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>
-                            {tab}
-                        </button>
+                 <p className="text-slate-300 text-xl">Lassen Sie sich inspirieren.</p>
+              </div>
+              <div className="container mx-auto px-6 py-16">
+                 <div className="flex justify-center gap-4 mb-12 flex-wrap">
+                    {Object.keys(exhibitions).map(tab => (
+                       <button key={tab} onClick={() => setActiveExhibitionTab(tab)} className={`px-6 py-2 rounded-full font-bold ${activeExhibitionTab === tab ? `${theme.bg} text-white` : 'bg-slate-100 text-slate-600'}`}>{tab}</button>
                     ))}
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fadeIn">
-                    {exhibitions[activeExhibitionTab].map((src, index) => (
-                        <div key={index} className="group relative aspect-[4/3] rounded-sm overflow-hidden bg-slate-100">
-                            <img src={src} alt="" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" onError={handleImageError} />
-                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                                <Maximize className="w-12 h-12 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
-                            </div>
-                        </div>
+                 </div>
+                 <div className="grid md:grid-cols-3 gap-6">
+                    {exhibitions[activeExhibitionTab].map((src, i) => (
+                       <img key={i} src={src} className="w-full aspect-[4/3] object-cover rounded-sm shadow-md" onError={handleImageError} />
                     ))}
-                </div>
-                <div className="text-center mt-16">
-                     <CTAButton text="Beratungstermin vereinbaren" onClick={() => navigateTo('ansprechpartner')} />
-                </div>
-             </div>
-          </div>
-      )}
+                 </div>
+              </div>
+           </div>
+        )}
 
-      {/* === FOOTER (Always visible) === */}
-      <footer className="bg-slate-50 text-slate-600 py-16 border-t border-slate-200">
-        <div className="container mx-auto px-6 grid md:grid-cols-4 gap-8 mb-12">
-          <div>
-             <div className="flex items-center gap-2 mb-6">
-                <img src="https://www.retzmann-bauzentrum.de/fileadmin/user_upload/Retzmann/images/logo_small.png" alt="Logo" className="h-8 opacity-80" onError={handleImageError} />
-             </div>
-             <div className="text-sm space-y-2">
-                 <p className="font-bold text-slate-900">Bauzentrum Retzmann GmbH</p>
-                 <p>Am Eichelgärtchen 2 b</p>
-                 <p>56283 Halsenbach</p>
-             </div>
-          </div>
-          <div>
-            <h4 className="font-bold text-slate-900 mb-4 uppercase text-sm tracking-wider">Fachabteilungen</h4>
-            <ul className="space-y-2 text-sm">
-                <li><button onClick={() => navigateTo('trockenbau')} className={`hover:${theme.text} transition-colors text-left`}>Trockenbau</button></li>
-                <li><span className="text-slate-400 cursor-not-allowed">Bauelemente</span></li>
-                <li><span className="text-slate-400 cursor-not-allowed">Baufachmarkt</span></li>
-            </ul>
-          </div>
-          <div>
-             <h4 className="font-bold text-slate-900 mb-4 uppercase text-sm tracking-wider">Kontakt</h4>
-             <button onClick={() => navigateTo('ansprechpartner')} className={`hover:${theme.text} font-bold`}>Ansprechpartner finden</button>
-          </div>
+        {/* VIEW: RATGEBER */}
+        {currentView === 'home' && (
+            <section id="guides" className="py-24 bg-slate-50 border-t border-slate-200">
+                <div className="container mx-auto px-6">
+                    <div className="text-center mb-12">
+                        <h2 className={`${theme.text} font-bold uppercase text-sm`}>Tipps & Tricks</h2>
+                        <h3 className="text-4xl font-bold text-slate-900">Ratgeber</h3>
+                    </div>
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {guidesData.map((guide, i) => (
+                            <div key={i} className="bg-white rounded-sm overflow-hidden shadow-md group hover:-translate-y-1 transition-transform">
+                                <div className="h-48 overflow-hidden">
+                                    <img src={guide.img} className="w-full h-full object-cover transition-transform group-hover:scale-110" onError={handleImageError} />
+                                </div>
+                                <div className="p-6">
+                                    <h4 className="font-bold text-xl mb-2">{guide.title}</h4>
+                                    <p className="text-slate-600 text-sm mb-4">{guide.desc}</p>
+                                    <span className={`${theme.text} font-bold text-sm uppercase flex items-center gap-2`}>Lesen <ChevronRight className="w-4 h-4"/></span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+        )}
+
+      </main>
+
+      {/* FOOTER */}
+      <footer className="bg-slate-50 text-slate-600 py-16 border-t border-slate-200 mt-auto">
+        <div className="container mx-auto px-6 grid md:grid-cols-3 gap-12 text-sm">
+           <div>
+              <img src="https://www.retzmann-bauzentrum.de/fileadmin/user_upload/Retzmann/images/logo_small.png" className="h-8 mb-4 opacity-80" onError={handleImageError} />
+              <p className="font-bold">Bauzentrum Retzmann GmbH</p>
+              <p>Am Eichelgärtchen 2 b, 56283 Halsenbach</p>
+           </div>
+           <div>
+              <h4 className="font-bold text-slate-900 mb-4 uppercase">Rechtliches</h4>
+              <ul className="space-y-2">
+                 <li><a href="#" className="hover:text-slate-900">Impressum</a></li>
+                 <li><a href="#" className="hover:text-slate-900">Datenschutz</a></li>
+                 <li><a href="#" className="hover:text-slate-900">AGB</a></li>
+              </ul>
+           </div>
+           <div>
+              <h4 className="font-bold text-slate-900 mb-4 uppercase">Kontakt</h4>
+              <button onClick={() => navigateTo('ansprechpartner')} className={`font-bold ${theme.text}`}>Ansprechpartner finden</button>
+           </div>
         </div>
-        <div className="container mx-auto px-6 text-center text-xs text-slate-400 border-t border-slate-200 pt-8">
-          &copy; 2026 Bauzentrum Retzmann GmbH. Alle Rechte vorbehalten.
-        </div>
+        <div className="text-center text-xs text-slate-400 mt-12">&copy; 2026 Bauzentrum Retzmann GmbH</div>
       </footer>
+
     </div>
   );
 };
