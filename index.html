@@ -65,23 +65,22 @@
         .view-section.active { display: block; animation: fadeIn 0.4s ease-out; }
         
         .gallery-tab { display: none; }
-        /* WICHTIG: Grid für aktive Galerien */
         .gallery-tab.active { display: grid; animation: fadeIn 0.4s ease-out; }
         
         /* Mobile Menu */
         #mobile-menu { transition: max-height 0.3s ease-in-out, opacity 0.3s; max-height: 0; opacity: 0; overflow: hidden; }
         #mobile-menu.open { max-height: 90vh; opacity: 1; overflow-y: auto; }
 
-        /* Mobile Submenu Transition */
+        /* Mobile Submenu */
         .mobile-submenu { transition: max-height 0.3s ease-in-out; max-height: 0; overflow: hidden; }
         .mobile-submenu.open { max-height: 800px; } 
 
-        /* Slider Übergänge */
+        /* Slider */
         .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.5s ease-in-out; z-index: 0; }
         .slide.active { opacity: 1; z-index: 10; }
         .slide img { width: 100%; height: 100%; object-fit: cover; }
         
-        /* Partner Logos im Banner */
+        /* Logos */
         .partner-logo { 
             opacity: 1; 
             transition: transform 0.3s ease; 
@@ -92,7 +91,7 @@
             transform: scale(1.1); 
         }
 
-        /* Dropdown Hover */
+        /* Hover Dropdown */
         .group:hover .group-hover\:visible { visibility: visible; }
         .group:hover .group-hover\:opacity-100 { opacity: 1; }
     </style>
@@ -128,7 +127,7 @@
             </div>
 
             <!-- Desktop Nav -->
-            <nav class="hidden xl:flex items-center gap-6">
+            <nav class="hidden xl:flex items-center gap-8">
                 <button onclick="switchView('home')" class="text-sm font-bold uppercase tracking-wide hover:text-brand-red transition-colors">Start</button>
                 
                 <div class="relative group">
@@ -140,14 +139,14 @@
                         <button onclick="switchView('trockenbau')" class="block w-full text-left px-6 py-3 text-sm text-slate-600 hover:bg-slate-50 hover:text-brand-red border-b border-slate-50 last:border-0">Trockenbau</button>
                         <button onclick="switchView('bauelemente')" class="block w-full text-left px-6 py-3 text-sm text-slate-600 hover:bg-slate-50 hover:text-brand-red border-b border-slate-50 last:border-0">Bauelemente</button>
                         <button onclick="switchView('baufachmarkt')" class="block w-full text-left px-6 py-3 text-sm text-slate-600 hover:bg-slate-50 hover:text-brand-red border-b border-slate-50 last:border-0">Baufachmarkt</button>
-                        <button onclick="switchView('home'); setTimeout(() => document.getElementById('departments').scrollIntoView({behavior:'smooth'}), 100);" class="block w-full text-left px-6 py-3 text-sm text-slate-600 hover:bg-slate-50 hover:text-brand-red border-b border-slate-50 last:border-0">Alle Abteilungen</button>
+                        <button onclick="switchView('home', 'departments')" class="block w-full text-left px-6 py-3 text-sm text-slate-600 hover:bg-slate-50 hover:text-brand-red border-b border-slate-50 last:border-0">Alle Abteilungen</button>
                     </div>
                 </div>
 
                 <button onclick="switchView('services')" class="text-sm font-medium uppercase tracking-wide text-slate-600 hover:text-brand-red transition-colors">Service</button>
                 <button onclick="switchView('ausstellungen')" class="text-sm font-medium uppercase tracking-wide text-slate-600 hover:text-brand-red transition-colors">Ausstellungen</button>
 
-                <!-- Über uns Dropdown -->
+                <!-- Über Uns Dropdown -->
                 <div class="relative group">
                     <button class="flex items-center gap-1 text-sm font-medium uppercase tracking-wide text-slate-600 hover:text-brand-red py-4">
                         Über uns <i class="fa-solid fa-chevron-down text-xs ml-1"></i>
@@ -162,7 +161,8 @@
                 </div>
 
                 <button onclick="switchView('ansprechpartner')" class="text-sm font-medium uppercase tracking-wide text-slate-600 hover:text-brand-red transition-colors">Kontakt</button>
-                
+
+                <!-- CTA Button -->
                 <a href="tel:+49674793430" class="bg-brand-red hover:bg-brand-darkRed text-white px-5 py-2.5 rounded-sm text-sm font-bold shadow-md flex items-center gap-2 transition-all hover:-translate-y-0.5">
                     <i class="fa-solid fa-phone"></i> Jetzt anrufen
                 </a>
@@ -188,7 +188,7 @@
                          <button onclick="switchView('trockenbau'); toggleMenu()" class="block text-slate-600 hover:text-brand-red w-full text-left">Trockenbau</button>
                          <button onclick="switchView('bauelemente'); toggleMenu()" class="block text-slate-600 hover:text-brand-red w-full text-left">Bauelemente</button>
                          <button onclick="switchView('baufachmarkt'); toggleMenu()" class="block text-slate-600 hover:text-brand-red w-full text-left">Baufachmarkt</button>
-                         <button onclick="switchView('home'); setTimeout(() => document.getElementById('departments').scrollIntoView({behavior:'smooth'}), 100); toggleMenu()" class="block text-slate-600 hover:text-brand-red w-full text-left">Alle Abteilungen</button>
+                         <button onclick="switchView('home', 'departments'); toggleMenu()" class="block text-slate-600 hover:text-brand-red w-full text-left">Alle Abteilungen</button>
                     </div>
                 </div>
 
@@ -208,9 +208,6 @@
                 </div>
 
                 <button onclick="switchView('ansprechpartner'); toggleMenu()" class="text-left font-header font-bold text-lg text-brand-red pb-2">Kontakt & Team</button>
-                <a href="tel:+49674793430" class="mt-4 bg-brand-red text-white w-full py-4 rounded-sm text-center font-bold flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-phone"></i> Jetzt anrufen
-                </a>
             </div>
         </div>
     </header>
@@ -261,18 +258,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Slide 3 -->
-                    <div class="slide">
-                        <img src="https://www.retzmann-bauzentrum.de/fileadmin/user_upload/Retzmann/seiten/Home/Slider/Schuettgutboxen_cropped.jpg" alt="Schuettgut" onerror="this.src='https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=2600';">
-                         <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/50 to-transparent"></div>
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="text-center px-4 max-w-4xl">
-                                <h1 class="font-header text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-xl">Schüttgutlager</h1>
-                                <p class="text-xl text-gray-300 mb-10 bg-brand-dark/40 inline-block px-6 py-2 rounded backdrop-blur-sm">Flexibel und passgenau für jeden Bedarf.</p>
-                                <button onclick="switchView('ansprechpartner')" class="bg-brand-red hover:bg-brand-darkRed text-white px-8 py-4 rounded-sm font-bold text-lg uppercase tracking-wide shadow-xl">Preise anfragen</button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <!-- Controls -->
                 <button onclick="changeSlide(-1)" class="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/10 hover:bg-white/20 p-4 rounded-full text-white backdrop-blur-sm transition-all hidden md:block"><i class="fa-solid fa-chevron-left text-2xl"></i></button>
@@ -316,7 +301,7 @@
                 </div>
             </section>
             
-            <!-- Google Reviews Section (RESTORED) -->
+            <!-- Google Reviews -->
             <section class="py-24 bg-brand-light border-t border-slate-200">
                 <div class="container mx-auto px-6">
                     <div class="text-center max-w-3xl mx-auto mb-16">
@@ -365,8 +350,8 @@
                     </div>
                 </div>
             </section>
-            
-            <!-- History Teaser (Start & End only) -->
+
+            <!-- History Teaser -->
             <section id="history" class="py-24 bg-white border-t border-slate-200">
                 <div class="container mx-auto px-6">
                     <div class="flex flex-col lg:flex-row gap-16">
@@ -401,7 +386,7 @@
                                     <p class="text-slate-700">Beschäftigt das Unternehmen 14 Mitarbeiter. Es verfügt über einen eigenen Fuhrpark mit modernsten Kranfahrzeugen.</p>
                                 </div>
                                 <div class="mt-8">
-                                     <button onclick="switchView('history')" class="bg-brand-red hover:bg-brand-darkRed text-white px-8 py-3 rounded-sm font-bold transition-all uppercase tracking-wide">
+                                    <button onclick="switchView('history')" class="bg-brand-red hover:bg-brand-darkRed text-white px-8 py-3 rounded-sm font-bold transition-all uppercase tracking-wide">
                                         Zu unserer ganzen Geschichte
                                     </button>
                                 </div>
@@ -423,7 +408,7 @@
              </div>
              <div class="container mx-auto px-6 py-16 animate-fade-in">
                  <div class="max-w-4xl mx-auto border-l-2 border-slate-200 pl-8 space-y-16">
-                     <!-- Timeline Items -->
+                     <!-- Full Timeline Items -->
                      <div class="relative group">
                          <div class="absolute -left-[41px] top-1 w-5 h-5 rounded-full border-4 border-white bg-slate-300 group-hover:bg-brand-red group-hover:scale-125 transition-all shadow-sm"></div>
                          <span class="text-2xl font-header font-bold text-brand-dark group-hover:text-brand-red transition-colors block mb-2 font-mono">1971</span>
@@ -608,18 +593,21 @@
                                 <div class="w-20 h-20 bg-slate-100 rounded-full mx-auto mb-4 flex items-center justify-center text-slate-400 text-2xl"><i class="fa-solid fa-user"></i></div>
                                 <h4 class="font-bold text-xl text-brand-dark mb-1">Ralph Engel</h4>
                                 <a href="tel:06747934315" class="block text-brand-red font-bold mb-2 hover:underline"><i class="fa-solid fa-phone mr-2"></i>(06747) 9343-15</a>
+                                <div class="text-slate-500 text-sm mb-2"><i class="fa-solid fa-fax mr-1"></i> (06747) 9343-20</div>
                                 <a href="mailto:r.engel@retzmann-bauzentrum.de" class="text-slate-600 text-sm hover:text-brand-red">r.engel@retzmann-bauzentrum.de</a>
                             </div>
                             <div class="bg-white p-8 rounded-sm shadow-lg border border-slate-100 text-center hover:-translate-y-1 transition-transform">
                                 <div class="w-20 h-20 bg-slate-100 rounded-full mx-auto mb-4 flex items-center justify-center text-slate-400 text-2xl"><i class="fa-solid fa-user"></i></div>
                                 <h4 class="font-bold text-xl text-brand-dark mb-1">Michael Retzmann</h4>
                                 <a href="tel:06747934317" class="block text-brand-red font-bold mb-2 hover:underline"><i class="fa-solid fa-phone mr-2"></i>(06747) 9343-17</a>
+                                <div class="text-slate-500 text-sm mb-2"><i class="fa-solid fa-fax mr-1"></i> (06747) 9343-24</div>
                                 <a href="mailto:m.retzmann@retzmann-bauzentrum.de" class="text-slate-600 text-sm hover:text-brand-red">m.retzmann@retzmann-bauzentrum.de</a>
                             </div>
                             <div class="bg-white p-8 rounded-sm shadow-lg border border-slate-100 text-center hover:-translate-y-1 transition-transform">
                                 <div class="w-20 h-20 bg-slate-100 rounded-full mx-auto mb-4 flex items-center justify-center text-slate-400 text-2xl"><i class="fa-solid fa-user"></i></div>
                                 <h4 class="font-bold text-xl text-brand-dark mb-1">Uwe Retzmann</h4>
                                 <a href="tel:06747934311" class="block text-brand-red font-bold mb-2 hover:underline"><i class="fa-solid fa-phone mr-2"></i>(06747) 9343-11</a>
+                                <div class="text-slate-500 text-sm mb-2"><i class="fa-solid fa-fax mr-1"></i> (06747) 9343-20</div>
                                 <a href="mailto:u.retzmann@retzmann-bauzentrum.de" class="text-slate-600 text-sm hover:text-brand-red">u.retzmann@retzmann-bauzentrum.de</a>
                             </div>
                         </div>
@@ -628,7 +616,7 @@
              </div>
         </div>
 
-        <!-- === VIEW: BAUELEMENTE === -->
+        <!-- ==================== VIEW: BAUELEMENTE ==================== -->
         <div id="view-bauelemente" class="view-section">
             <div class="bg-brand-dark py-24 text-center mt-8 animate-slide-up">
                  <div class="container mx-auto px-6">
@@ -697,18 +685,21 @@
                                 <div class="w-20 h-20 bg-slate-100 rounded-full mx-auto mb-4 flex items-center justify-center text-slate-400 text-2xl"><i class="fa-solid fa-user"></i></div>
                                 <h4 class="font-bold text-xl text-brand-dark mb-1">Ronny Bontenakels</h4>
                                 <a href="tel:06747934312" class="block text-brand-red font-bold mb-2 hover:underline"><i class="fa-solid fa-phone mr-2"></i>(06747) 9343-12</a>
+                                <div class="text-slate-500 text-sm mb-2"><i class="fa-solid fa-fax mr-1"></i> (06747) 9343-20</div>
                                 <a href="mailto:r.bontenakels@retzmann-bauzentrum.de" class="text-slate-600 text-sm hover:text-brand-red">r.bontenakels@retzmann-bauzentrum.de</a>
                             </div>
                             <div class="bg-white p-8 rounded-sm shadow-lg border border-slate-100 text-center hover:-translate-y-1 transition-transform">
                                 <div class="w-20 h-20 bg-slate-100 rounded-full mx-auto mb-4 flex items-center justify-center text-slate-400 text-2xl"><i class="fa-solid fa-user"></i></div>
                                 <h4 class="font-bold text-xl text-brand-dark mb-1">Uwe Retzmann</h4>
                                 <a href="tel:06747934311" class="block text-brand-red font-bold mb-2 hover:underline"><i class="fa-solid fa-phone mr-2"></i>(06747) 9343-11</a>
+                                <div class="text-slate-500 text-sm mb-2"><i class="fa-solid fa-fax mr-1"></i> (06747) 9343-20</div>
                                 <a href="mailto:u.retzmann@retzmann-bauzentrum.de" class="text-slate-600 text-sm hover:text-brand-red">u.retzmann@retzmann-bauzentrum.de</a>
                             </div>
                             <div class="bg-white p-8 rounded-sm shadow-lg border border-slate-100 text-center hover:-translate-y-1 transition-transform">
                                 <div class="w-20 h-20 bg-slate-100 rounded-full mx-auto mb-4 flex items-center justify-center text-slate-400 text-2xl"><i class="fa-solid fa-user"></i></div>
                                 <h4 class="font-bold text-xl text-brand-dark mb-1">Ralph Engel</h4>
                                 <a href="tel:06747934315" class="block text-brand-red font-bold mb-2 hover:underline"><i class="fa-solid fa-phone mr-2"></i>(06747) 9343-15</a>
+                                <div class="text-slate-500 text-sm mb-2"><i class="fa-solid fa-fax mr-1"></i> (06747) 9343-20</div>
                                 <a href="mailto:r.engel@retzmann-bauzentrum.de" class="text-slate-600 text-sm hover:text-brand-red">r.engel@retzmann-bauzentrum.de</a>
                             </div>
                         </div>
@@ -798,15 +789,15 @@
                      <div class="overflow-hidden relative w-full">
                          <div class="flex w-max animate-scroll gap-12 items-center">
                              <!-- Original List -->
-                             <img src="https://www.retzmann-bauzentrum.de/fileadmin/_processed_/7/f/csm_GARDENA_Sondervereinbarung_d0526fb59d.jpg" class="partner-logo" alt="Gardena" onerror="this.style.display='none'">
-                             <img src="https://www.retzmann-bauzentrum.de/fileadmin/_processed_/5/a/csm_Makita_f8d634a00a.jpg" class="partner-logo" alt="Makita" onerror="this.style.display='none'">
-                             <img src="https://www.retzmann-bauzentrum.de/fileadmin/_processed_/d/d/csm_kaercher_65b43b3cb9.jpg" class="partner-logo" alt="Kärcher" onerror="this.style.display='none'">
-                             <img src="https://www.retzmann-bauzentrum.de/fileadmin/_processed_/e/d/csm_einhell_f6c3996df8.jpg" class="partner-logo" alt="Einhell" onerror="this.style.display='none'">
-                             <img src="https://www.retzmann-bauzentrum.de/fileadmin/_processed_/a/e/csm_tarkett_68662e5237.jpg" class="partner-logo" alt="Tarkett" onerror="this.style.display='none'">
-                             <img src="https://www.retzmann-bauzentrum.de/fileadmin/_processed_/1/3/csm_bosch_c71b42cc37.jpg" class="partner-logo" alt="Bosch" onerror="this.style.display='none'">
-                             <img src="https://www.retzmann-bauzentrum.de/fileadmin/_processed_/4/9/csm_Sola_bearb_95de13060b.jpg" class="partner-logo" alt="Sola" onerror="this.style.display='none'">
-                             <img src="https://www.retzmann-bauzentrum.de/fileadmin/_processed_/e/5/csm_PREBENA_bearb_22d070efe3.jpg" class="partner-logo" alt="Prebena" onerror="this.style.display='none'">
-                             <img src="https://www.retzmann-bauzentrum.de/fileadmin/_processed_/5/3/csm_SPAX_Logo_400x300_Pixel_3a22502c31.png" class="partner-logo" alt="Spax" onerror="this.style.display='none'">
+                             <img src="https://www.retzmann-bauzentrum.de/fileadmin/_processed_/7/f/csm_GARDENA_Sondervereinbarung_d0526fb59d.jpg" class="h-10 object-contain partner-logo" alt="Gardena" onerror="this.style.display='none'">
+                             <img src="https://www.retzmann-bauzentrum.de/fileadmin/_processed_/5/a/csm_Makita_f8d634a00a.jpg" class="h-10 object-contain partner-logo" alt="Makita" onerror="this.style.display='none'">
+                             <img src="https://www.retzmann-bauzentrum.de/fileadmin/_processed_/d/d/csm_kaercher_65b43b3cb9.jpg" class="h-10 object-contain partner-logo" alt="Kärcher" onerror="this.style.display='none'">
+                             <img src="https://www.retzmann-bauzentrum.de/fileadmin/_processed_/e/d/csm_einhell_f6c3996df8.jpg" class="h-10 object-contain partner-logo" alt="Einhell" onerror="this.style.display='none'">
+                             <img src="https://www.retzmann-bauzentrum.de/fileadmin/_processed_/a/e/csm_tarkett_68662e5237.jpg" class="h-10 object-contain partner-logo" alt="Tarkett" onerror="this.style.display='none'">
+                             <img src="https://www.retzmann-bauzentrum.de/fileadmin/_processed_/1/3/csm_bosch_c71b42cc37.jpg" class="h-10 object-contain partner-logo" alt="Bosch" onerror="this.style.display='none'">
+                             <img src="https://www.retzmann-bauzentrum.de/fileadmin/_processed_/4/9/csm_Sola_bearb_95de13060b.jpg" class="h-10 object-contain partner-logo" alt="Sola" onerror="this.style.display='none'">
+                             <img src="https://www.retzmann-bauzentrum.de/fileadmin/_processed_/e/5/csm_PREBENA_bearb_22d070efe3.jpg" class="h-10 object-contain partner-logo" alt="Prebena" onerror="this.style.display='none'">
+                             <img src="https://www.retzmann-bauzentrum.de/fileadmin/_processed_/5/3/csm_SPAX_Logo_400x300_Pixel_3a22502c31.png" class="h-10 object-contain partner-logo" alt="Spax" onerror="this.style.display='none'">
                              
                              <!-- Duplicates for Loop -->
                              <img src="https://www.retzmann-bauzentrum.de/fileadmin/_processed_/7/f/csm_GARDENA_Sondervereinbarung_d0526fb59d.jpg" class="partner-logo" alt="Gardena" onerror="this.style.display='none'">
@@ -837,12 +828,14 @@
                                 <div class="w-20 h-20 bg-slate-100 rounded-full mx-auto mb-4 flex items-center justify-center text-slate-400 text-2xl"><i class="fa-solid fa-user"></i></div>
                                 <h4 class="font-bold text-xl text-brand-dark mb-1">Theo Muders</h4>
                                 <a href="tel:06747934326" class="block text-brand-red font-bold mb-2 hover:underline"><i class="fa-solid fa-phone mr-2"></i>(06747) 9343-26</a>
+                                <div class="text-slate-500 text-sm mb-2"><i class="fa-solid fa-fax mr-1"></i> (06747) 9343-20</div>
                                 <a href="mailto:t.muders@retzmann-bauzentrum.de" class="text-slate-600 text-sm hover:text-brand-red">t.muders@retzmann-bauzentrum.de</a>
                             </div>
                             <div class="bg-white p-8 rounded-sm shadow-lg border border-slate-100 text-center hover:-translate-y-1 transition-transform">
                                 <div class="w-20 h-20 bg-slate-100 rounded-full mx-auto mb-4 flex items-center justify-center text-slate-400 text-2xl"><i class="fa-solid fa-user"></i></div>
                                 <h4 class="font-bold text-xl text-brand-dark mb-1">Thomas Fuchs</h4>
                                 <a href="tel:06747934319" class="block text-brand-red font-bold mb-2 hover:underline"><i class="fa-solid fa-phone mr-2"></i>06747/9343-19</a>
+                                <div class="text-slate-500 text-sm mb-2"><i class="fa-solid fa-fax mr-1"></i> (06747) 9343-20</div>
                                 <a href="mailto:t.fuchs@retzmann-bauzentrum.de" class="text-slate-600 text-sm hover:text-brand-red">t.fuchs@retzmann-bauzentrum.de</a>
                             </div>
                         </div>
@@ -900,48 +893,7 @@
             </div>
         </div>
 
-        <!-- === VIEW: ANSPRECHPARTNER (MAIN) === -->
-        <div id="view-ansprechpartner" class="view-section">
-            <div class="bg-brand-dark py-24 text-center mt-8 animate-slide-up">
-                 <div class="container mx-auto px-6">
-                    <h1 class="font-header text-5xl md:text-6xl font-bold text-white mb-4 uppercase">Ihre Ansprechpartner</h1>
-                    <p class="text-slate-400 text-xl max-w-2xl mx-auto font-light">Kompetenz hat einen Namen. Finden Sie den richtigen Experten für Ihr Anliegen.</p>
-                 </div>
-             </div>
-             <div class="container mx-auto px-6 py-16 animate-fade-in">
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Zentrale -->
-                    <div class="bg-white p-8 rounded-sm shadow-lg border border-slate-200 hover:-translate-y-1 transition-transform">
-                        <div class="flex items-center gap-4 mb-6 border-b border-slate-100 pb-4">
-                            <div class="bg-brand-red text-white w-10 h-10 rounded-full flex items-center justify-center"><i class="fa-solid fa-users"></i></div>
-                            <h4 class="font-header font-bold text-xl text-brand-dark uppercase tracking-wide">Zentrale</h4>
-                        </div>
-                        <div class="mb-4">
-                            <p class="font-bold text-lg text-slate-800">Sabine Christmann</p>
-                            <a href="tel:06747934322" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-22</a>
-                            <a href="mailto:s.christmann@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline"><i class="fa-solid fa-envelope w-5"></i> E-Mail schreiben</a>
-                        </div>
-                    </div>
-                    <!-- Buchhaltung -->
-                    <div class="bg-white p-8 rounded-sm shadow-lg border border-slate-200 hover:-translate-y-1 transition-transform">
-                         <div class="flex items-center gap-4 mb-6 border-b border-slate-100 pb-4">
-                            <div class="bg-brand-red text-white w-10 h-10 rounded-full flex items-center justify-center"><i class="fa-solid fa-calculator"></i></div>
-                            <h4 class="font-header font-bold text-xl text-brand-dark uppercase tracking-wide">Buchhaltung</h4>
-                        </div>
-                        <div class="mb-4">
-                            <p class="font-bold text-lg text-slate-800">Jennifer Barthel</p>
-                            <a href="tel:06747934310" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-10</a>
-                        </div>
-                        <div class="mb-4">
-                            <p class="font-bold text-lg text-slate-800">Anja Kasper</p>
-                            <a href="tel:06747934313" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-13</a>
-                        </div>
-                    </div>
-                </div>
-             </div>
-        </div>
-
-        <!-- === VIEW: ANFAHRT === -->
+        <!-- ==================== VIEW: ANFAHRT ==================== -->
         <div id="view-anfahrt" class="view-section">
             <div class="bg-brand-dark py-24 text-center mt-8 animate-slide-up">
                  <div class="container mx-auto px-6">
@@ -956,7 +908,6 @@
                          <p class="text-slate-600 text-lg">Am Eichelgärtchen 2 b<br>56283 Halsenbach</p>
                      </div>
                      <div class="aspect-video w-full rounded-sm overflow-hidden border border-slate-200">
-                         <!-- Google Maps Embed -->
                          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2558.2123456789!2d7.565!3d50.165!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sBauzentrum%20Retzmann%20GmbH!5e0!3m2!1sde!2sde!4v1600000000000!5m2!1sde!2sde" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
                      </div>
                      <div class="mt-8 text-center">
@@ -968,7 +919,7 @@
              </div>
         </div>
 
-        <!-- === VIEW: OEFFNUNGSZEITEN === -->
+        <!-- ==================== VIEW: ÖFFNUNGSZEITEN ==================== -->
         <div id="view-oeffnungszeiten" class="view-section">
             <div class="bg-brand-dark py-24 text-center mt-8 animate-slide-up">
                  <div class="container mx-auto px-6">
@@ -982,7 +933,6 @@
                          <i class="fa-regular fa-clock"></i>
                      </div>
                      <h3 class="font-header text-3xl font-bold text-brand-dark mb-8 uppercase">Unsere Zeiten</h3>
-                     
                      <div class="space-y-4 text-lg">
                          <div class="flex justify-between items-center border-b border-slate-100 pb-2">
                              <span class="font-bold text-slate-700">Montag - Freitag</span>
@@ -993,7 +943,6 @@
                              <span class="text-brand-red font-bold">8:00 - 13:00 Uhr</span>
                          </div>
                      </div>
-
                      <div class="mt-8 pt-6 border-t border-slate-100">
                          <p class="text-slate-500 text-sm">An Sonn- und Feiertagen geschlossen.</p>
                      </div>
@@ -1001,7 +950,7 @@
              </div>
         </div>
 
-        <!-- === VIEW: PARTNER I&M === -->
+        <!-- ==================== VIEW: i&M PARTNER ==================== -->
         <div id="view-partner-im" class="view-section">
             <div class="bg-brand-dark py-24 text-center mt-8 animate-slide-up">
                  <div class="container mx-auto px-6">
@@ -1010,23 +959,31 @@
                  </div>
              </div>
              <div class="container mx-auto px-6 py-16 animate-fade-in">
-                 <div class="flex flex-col lg:flex-row gap-12 items-center">
-                     <div class="lg:w-1/2">
-                         <img src="https://api.eurobaustoff.de/fileadmin/_processed_/9/7/csm_webcontent-iundm-bauelemente-splash_a3bfae535e.jpg" class="w-full rounded-sm shadow-xl" alt="i&M Bauzentrum">
-                     </div>
-                     <div class="lg:w-1/2">
-                         <h3 class="font-header text-3xl font-bold text-slate-900 mb-6 leading-tight">Die starke Fachhandelsmarke der EUROBAUSTOFF</h3>
-                         <div class="prose text-slate-600 space-y-4 leading-relaxed">
-                             <p>i&M Bauzentrum ist die Adresse für qualitätsbewusste Profis und Privatkunden, die individuelle Wohn(t)räume realisieren wollen. Als Fachhandelsmarke der EUROBAUSTOFF, Europas führender Kooperation für Baustoffe, Holz & Fliesen, steht i&M Bauzentrum ausnahmslos für Qualität.</p>
-                             <p>Über 120 inhabergeführte Standorte vereinen sich deutschlandweit unter der Marke i&M Bauzentrum zu einer starken Werbe- und Vertriebsgemeinschaft.</p>
-                             <p><strong>i&M steht für „ideen & Machen“.</strong></p>
+                 <div class="max-w-7xl mx-auto">
+                     <img src="https://api.eurobaustoff.de/fileadmin/user_upload/spezialinhalte/im-bauzentrum/webcontent-iundm-bauelemente-splash.jpg" class="w-full rounded-sm shadow-xl mb-12 h-auto" alt="i&M Bauzentrum">
+                     <div class="flex flex-col lg:flex-row gap-12">
+                         <div class="lg:w-2/3">
+                             <h3 class="font-header text-3xl font-bold text-slate-900 mb-6 leading-tight">Die starke Fachhandelsmarke der EUROBAUSTOFF</h3>
+                             <div class="prose text-slate-600 space-y-4 leading-relaxed text-lg">
+                                 <p>i&M Bauzentrum ist die Adresse für qualitätsbewusste Profis und Privatkunden, die individuelle Wohn(t)räume realisieren wollen. Als Fachhandelsmarke der EUROBAUSTOFF, Europas führender Kooperation für Baustoffe, Holz & Fliesen, steht i&M Bauzentrum ausnahmslos für Qualität.</p>
+                                 <p>Über 120 inhabergeführte Standorte vereinen sich deutschlandweit unter der Marke i&M Bauzentrum zu einer starken Werbe- und Vertriebsgemeinschaft.</p>
+                                 <p><strong>i&M steht für „ideen & Machen“.</strong></p>
+                             </div>
+                         </div>
+                         <div class="lg:w-1/3 bg-brand-light p-8 rounded-sm">
+                             <h4 class="font-bold text-xl mb-4">Das Versprechen</h4>
+                             <ul class="space-y-2 text-slate-600">
+                                 <li><i class="fa-solid fa-check text-brand-red mr-2"></i> Qualitätsvolle Sortimente</li>
+                                 <li><i class="fa-solid fa-check text-brand-red mr-2"></i> Inspirierende Ausstellungen</li>
+                                 <li><i class="fa-solid fa-check text-brand-red mr-2"></i> Fachberatung durch Spezialisten</li>
+                             </ul>
                          </div>
                      </div>
                  </div>
              </div>
         </div>
 
-        <!-- === VIEW: PARTNER DHB === -->
+        <!-- ==================== VIEW: DHB PARTNER ==================== -->
         <div id="view-partner-dhb" class="view-section">
             <div class="bg-brand-dark py-24 text-center mt-8 animate-slide-up">
                  <div class="container mx-auto px-6">
@@ -1035,32 +992,455 @@
                  </div>
              </div>
              <div class="container mx-auto px-6 py-16 animate-fade-in">
-                 <div class="flex flex-col lg:flex-row gap-12 items-center">
-                     <div class="lg:w-1/2 order-2 lg:order-1">
-                         <h3 class="font-header text-3xl font-bold text-slate-900 mb-6 leading-tight">Offizieller Partner der Nationalmannschaft</h3>
-                         <div class="prose text-slate-600 space-y-4 leading-relaxed">
-                             <p>i&M Bauzentrum ist seit 01.01.2018 Offizieller Partner der Männer-Nationalmannschaft des Deutschen Handballbund (DHB). Genau wie i&M Bauzentrum ist diese Mannschaft hochengagiert, leistungsbereit und authentisch.</p>
-                             <p>Vor allem aber: Sie versteht sich als Team. Starallüren: Fehlanzeige. Und das bei extrem hohem Engagement. Genau wie i&M Bauzentrum.</p>
+                 <div class="max-w-7xl mx-auto">
+                     <img src="https://api.eurobaustoff.de/fileadmin/_processed_/f/3/csm_wm-23-sascha-klahn_00059927---kopie_afc138a452.jpg" class="w-full rounded-sm shadow-xl mb-12 h-auto" alt="DHB Nationalmannschaft">
+                     <div class="flex flex-col lg:flex-row gap-12">
+                         <div class="lg:w-2/3">
+                             <h3 class="font-header text-3xl font-bold text-slate-900 mb-6 leading-tight">Offizieller Partner der Nationalmannschaft</h3>
+                             <div class="prose text-slate-600 space-y-4 leading-relaxed text-lg">
+                                 <p>i&M Bauzentrum ist seit 01.01.2018 Offizieller Partner der Männer-Nationalmannschaft des Deutschen Handballbund (DHB). Genau wie i&M Bauzentrum ist diese Mannschaft hochengagiert, leistungsbereit und authentisch.</p>
+                                 <p>Vor allem aber: Sie versteht sich als Team. Starallüren: Fehlanzeige. Und das bei extrem hohem Engagement. Genau wie i&M Bauzentrum.</p>
+                             </div>
                          </div>
-                     </div>
-                     <div class="lg:w-1/2 order-1 lg:order-2">
-                         <img src="https://api.eurobaustoff.de/fileadmin/_processed_/f/3/csm_wm-23-sascha-klahn_00059927---kopie_afc138a452.jpg" class="w-full rounded-sm shadow-xl" alt="DHB Nationalmannschaft">
-                         <p class="text-xs text-slate-400 mt-2 text-right">© Sascha Klahn</p>
                      </div>
                  </div>
              </div>
         </div>
-        
-        <!-- === VIEW: SERVICES (UNSERE LEISTUNGEN) === -->
+
+        <!-- ==================== VIEW: SERVICES (UNSERE LEISTUNGEN) ==================== -->
         <div id="view-services" class="view-section">
+             <div class="bg-brand-dark py-24 text-center mt-8 animate-slide-up">
+                 <div class="container mx-auto px-6">
+                    <span class="text-brand-red font-bold tracking-widest uppercase text-sm block mb-4">Übersicht</span>
+                    <h1 class="font-header text-5xl md:text-6xl font-bold text-white mb-6 uppercase">Unsere Serviceleistungen</h1>
+                    <p class="text-slate-400 text-xl max-w-2xl mx-auto font-light">Wir unterstützen Sie bei Ihrem Bauvorhaben mit Rat und Tat.</p>
+                 </div>
+             </div>
+             <div class="container mx-auto px-6 py-16 animate-fade-in">
+                 <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                     <!-- Service Items -->
+                     <div class="bg-white p-6 rounded-sm shadow-md border border-slate-100 hover:shadow-xl transition-all group hover:-translate-y-1">
+                         <div class="w-12 h-12 bg-slate-50 text-brand-red rounded-full flex items-center justify-center text-xl mb-4 group-hover:bg-brand-red group-hover:text-white transition-colors"><i class="fa-solid fa-ruler-combined"></i></div>
+                         <h4 class="font-header font-bold text-lg text-slate-900 mb-2">Aufmaß</h4>
+                         <p class="text-slate-600 text-sm">Gerne berät Sie unser Fachpersonal vor Ort und nimmt Aufmaß für die geplante Maßnahme.</p>
+                     </div>
+                     <div class="bg-white p-6 rounded-sm shadow-md border border-slate-100 hover:shadow-xl transition-all group hover:-translate-y-1">
+                         <div class="w-12 h-12 bg-slate-50 text-brand-red rounded-full flex items-center justify-center text-xl mb-4 group-hover:bg-brand-red group-hover:text-white transition-colors"><i class="fa-solid fa-trash-can"></i></div>
+                         <h4 class="font-header font-bold text-lg text-slate-900 mb-2">Baucontainer</h4>
+                         <p class="text-slate-600 text-sm">Gerne stellen wir Ihnen für die Dauer Ihrer Baumaßnahme einen Baucontainer zur Verfügung.</p>
+                     </div>
+                     <div class="bg-white p-6 rounded-sm shadow-md border border-slate-100 hover:shadow-xl transition-all group hover:-translate-y-1">
+                         <div class="w-12 h-12 bg-slate-50 text-brand-red rounded-full flex items-center justify-center text-xl mb-4 group-hover:bg-brand-red group-hover:text-white transition-colors"><i class="fa-solid fa-hard-hat"></i></div>
+                         <h4 class="font-header font-bold text-lg text-slate-900 mb-2">Baustellenbetreuung</h4>
+                         <p class="text-slate-600 text-sm">Unser kompetentes Team steht Ihnen selbstverständlich während der gesamten Dauer Ihrer Baumaßnahme mit Rat und Tat zu Seite.</p>
+                     </div>
+                     <div class="bg-white p-6 rounded-sm shadow-md border border-slate-100 hover:shadow-xl transition-all group hover:-translate-y-1">
+                         <div class="w-12 h-12 bg-slate-50 text-brand-red rounded-full flex items-center justify-center text-xl mb-4 group-hover:bg-brand-red group-hover:text-white transition-colors"><i class="fa-solid fa-leaf"></i></div>
+                         <h4 class="font-header font-bold text-lg text-slate-900 mb-2">Energieberatung</h4>
+                         <p class="text-slate-600 text-sm">Machen Sie Ihr Haus zum Sparschwein. Wir beraten Sie objektiv, ehrlich und unverbindlich zum Energiesparen.</p>
+                     </div>
+                     <div class="bg-white p-6 rounded-sm shadow-md border border-slate-100 hover:shadow-xl transition-all group hover:-translate-y-1">
+                         <div class="w-12 h-12 bg-slate-50 text-brand-red rounded-full flex items-center justify-center text-xl mb-4 group-hover:bg-brand-red group-hover:text-white transition-colors"><i class="fa-solid fa-comments"></i></div>
+                         <h4 class="font-header font-bold text-lg text-slate-900 mb-2">Fachberatung</h4>
+                         <p class="text-slate-600 text-sm">Ob Rohbau, Innenausbau oder die Neugestaltung Ihrer Außenanlage - gerne stehen wir Ihnen mit Rat und Tat zur Verfügung.</p>
+                     </div>
+                     <div class="bg-white p-6 rounded-sm shadow-md border border-slate-100 hover:shadow-xl transition-all group hover:-translate-y-1">
+                         <div class="w-12 h-12 bg-slate-50 text-brand-red rounded-full flex items-center justify-center text-xl mb-4 group-hover:bg-brand-red group-hover:text-white transition-colors"><i class="fa-solid fa-fire-flame-simple"></i></div>
+                         <h4 class="font-header font-bold text-lg text-slate-900 mb-2">Gasflaschenservice</h4>
+                         <p class="text-slate-600 text-sm">Unser Partner Tyczka und wir bieten Ihnen eine Komplettversorgung mit klassischem Propangas sowie Staplergas.</p>
+                     </div>
+                     <div class="bg-white p-6 rounded-sm shadow-md border border-slate-100 hover:shadow-xl transition-all group hover:-translate-y-1">
+                         <div class="w-12 h-12 bg-slate-50 text-brand-red rounded-full flex items-center justify-center text-xl mb-4 group-hover:bg-brand-red group-hover:text-white transition-colors"><i class="fa-solid fa-gift"></i></div>
+                         <h4 class="font-header font-bold text-lg text-slate-900 mb-2">Geschenkgutscheine</h4>
+                         <p class="text-slate-600 text-sm">Mit einem Geschenkgutschein haben Sie immer das ideale Geschenk für jeden Anlass für Heimwerker und Profis.</p>
+                     </div>
+                     <div class="bg-white p-6 rounded-sm shadow-md border border-slate-100 hover:shadow-xl transition-all group hover:-translate-y-1">
+                         <div class="w-12 h-12 bg-slate-50 text-brand-red rounded-full flex items-center justify-center text-xl mb-4 group-hover:bg-brand-red group-hover:text-white transition-colors"><i class="fa-solid fa-handshake"></i></div>
+                         <h4 class="font-header font-bold text-lg text-slate-900 mb-2">Handwerkervermittlung</h4>
+                         <p class="text-slate-600 text-sm">Wir unterstützen Sie gerne bei der Suche nach dem geeigneten Handwerker in Ihrer Gegend.</p>
+                     </div>
+                     <div class="bg-white p-6 rounded-sm shadow-md border border-slate-100 hover:shadow-xl transition-all group hover:-translate-y-1">
+                         <div class="w-12 h-12 bg-slate-50 text-brand-red rounded-full flex items-center justify-center text-xl mb-4 group-hover:bg-brand-red group-hover:text-white transition-colors"><i class="fa-solid fa-truck-pickup"></i></div>
+                         <h4 class="font-header font-bold text-lg text-slate-900 mb-2">Krandienstleistung</h4>
+                         <p class="text-slate-600 text-sm">Durch unsere Kranfahrzeuge sind wir in der Lage, die Ware genau an den von Ihnen gewünschten Ort zu liefern.</p>
+                     </div>
+                     <div class="bg-white p-6 rounded-sm shadow-md border border-slate-100 hover:shadow-xl transition-all group hover:-translate-y-1">
+                         <div class="w-12 h-12 bg-slate-50 text-brand-red rounded-full flex items-center justify-center text-xl mb-4 group-hover:bg-brand-red group-hover:text-white transition-colors"><i class="fa-solid fa-id-card"></i></div>
+                         <h4 class="font-header font-bold text-lg text-slate-900 mb-2">Kundenkonto</h4>
+                         <p class="text-slate-600 text-sm">Kauf auf Rechnung, Hinterlegung Ihrer Einkaufskonditionen, Artikelhistorie und vieles mehr.</p>
+                     </div>
+                     <div class="service-box bg-white p-6 rounded-sm shadow-md border border-slate-100 hover:shadow-xl transition-all group hover:-translate-y-1">
+                         <div class="service-icon w-12 h-12 bg-slate-100 text-brand-red rounded-full flex items-center justify-center text-xl mb-4 transition-colors"><i class="fa-solid fa-warehouse"></i></div>
+                         <h4 class="font-header font-bold text-lg text-slate-900 mb-2">Überdachte Ladezone</h4>
+                         <p class="text-slate-600 text-sm">Wir sorgen für „trockene Füße“. Verladen Sie die gekauften Baustoffe in unserer überdachten Ladezone.</p>
+                     </div>
+                 </div>
+
+                 <!-- Buttons for Call and Appointment -->
+                 <div class="text-center mt-16 pt-12 border-t border-slate-100 flex flex-col sm:flex-row justify-center gap-6">
+                     <a href="tel:+49674793430" class="inline-flex items-center justify-center gap-3 bg-brand-dark text-white px-10 py-4 rounded-sm font-bold shadow-lg hover:bg-slate-800 transition-all uppercase tracking-wide group">
+                        <i class="fa-solid fa-phone group-hover:animate-pulse"></i> Jetzt anrufen
+                     </a>
+                     <button onclick="switchView('ansprechpartner')" class="inline-flex items-center justify-center gap-3 bg-brand-red text-white px-10 py-4 rounded-sm font-bold shadow-lg hover:bg-brand-darkRed transition-all uppercase tracking-wide group">
+                        <i class="fa-solid fa-calendar-check group-hover:scale-110 transition-transform"></i> Termin vereinbaren
+                     </button>
+                 </div>
+             </div>
+        </div>
+
+        <!-- ==================== VIEW: ANSPRECHPARTNER (COMPLETE LIST) ==================== -->
+        <div id="view-ansprechpartner" class="view-section">
             <div class="bg-brand-dark py-24 text-center mt-8 animate-slide-up">
-                <div class="container mx-auto px-6">
-                   <span class="text-brand-red font-bold tracking-widest uppercase text-sm block mb-4">Übersicht</span>
-                   <h1 class="font-header text-5xl md:text-6xl font-bold text-white mb-6 uppercase">Unsere Serviceleistungen</h1>
-                   <p class="text-slate-400 text-xl max-w-2xl mx-auto font-light">Wir unterstützen Sie bei Ihrem Bauvorhaben mit Rat und Tat.</p>
+                 <div class="container mx-auto px-6">
+                    <h1 class="font-header text-5xl md:text-6xl font-bold text-white mb-4 uppercase">Ihre Ansprechpartner</h1>
+                    <p class="text-slate-400 text-xl max-w-2xl mx-auto font-light">Kompetenz hat einen Namen. Finden Sie den richtigen Experten für Ihr Anliegen.</p>
+                 </div>
+             </div>
+             <div class="container mx-auto px-6 py-16 animate-fade-in">
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    
+                    <!-- Zentrale -->
+                    <div class="bg-white p-8 rounded-sm shadow-lg border border-slate-200 hover:-translate-y-1 transition-transform">
+                        <div class="flex items-center gap-4 mb-6 border-b border-slate-100 pb-4">
+                            <div class="bg-brand-red text-white w-10 h-10 rounded-full flex items-center justify-center"><i class="fa-solid fa-users"></i></div>
+                            <h4 class="font-header font-bold text-xl text-brand-dark uppercase tracking-wide">Zentrale</h4>
+                        </div>
+                        <div class="mb-4">
+                            <p class="font-bold text-lg text-slate-800">Sabine Christmann</p>
+                            <a href="tel:06747934322" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-22</a>
+                            <div class="text-slate-500 text-sm mb-1 ml-6"><i class="fa-solid fa-fax w-4"></i> (06747) 9343-20</div>
+                            <a href="mailto:s.christmann@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline ml-6"><i class="fa-solid fa-envelope w-4 -ml-6 mr-2"></i> E-Mail schreiben</a>
+                        </div>
+                    </div>
+
+                    <!-- Baufachmarkt -->
+                    <div class="bg-white p-8 rounded-sm shadow-lg border border-slate-200 hover:-translate-y-1 transition-transform">
+                        <div class="flex items-center gap-4 mb-6 border-b border-slate-100 pb-4">
+                            <div class="bg-brand-red text-white w-10 h-10 rounded-full flex items-center justify-center"><i class="fa-solid fa-hammer"></i></div>
+                            <h4 class="font-header font-bold text-xl text-brand-dark uppercase tracking-wide">Baufachmarkt</h4>
+                        </div>
+                        <div class="mb-6">
+                            <p class="font-bold text-lg text-slate-800">Theo Muders</p>
+                            <a href="tel:06747934326" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-26</a>
+                            <div class="text-slate-500 text-sm mb-1 ml-6"><i class="fa-solid fa-fax w-4"></i> (06747) 9343-20</div>
+                            <a href="mailto:t.muders@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline ml-6"><i class="fa-solid fa-envelope w-4 -ml-6 mr-2"></i> E-Mail schreiben</a>
+                        </div>
+                        <div>
+                            <p class="font-bold text-lg text-slate-800">Thomas Fuchs</p>
+                            <a href="tel:06747934319" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> 06747/9343-19</a>
+                            <div class="text-slate-500 text-sm mb-1 ml-6"><i class="fa-solid fa-fax w-4"></i> (06747) 9343-20</div>
+                            <a href="mailto:t.fuchs@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline ml-6"><i class="fa-solid fa-envelope w-4 -ml-6 mr-2"></i> E-Mail schreiben</a>
+                        </div>
+                    </div>
+
+                    <!-- Fliesen -->
+                    <div class="bg-white p-8 rounded-sm shadow-lg border border-slate-200 hover:-translate-y-1 transition-transform">
+                        <div class="flex items-center gap-4 mb-6 border-b border-slate-100 pb-4">
+                            <div class="bg-brand-red text-white w-10 h-10 rounded-full flex items-center justify-center"><i class="fa-solid fa-border-all"></i></div>
+                            <h4 class="font-header font-bold text-xl text-brand-dark uppercase tracking-wide">Fliesen</h4>
+                        </div>
+                        <div class="mb-6">
+                            <p class="font-bold text-lg text-slate-800">Leni Schmitt</p>
+                            <a href="tel:06747934323" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-23</a>
+                            <div class="text-slate-500 text-sm mb-1 ml-6"><i class="fa-solid fa-fax w-4"></i> (06747) 9343-20</div>
+                            <a href="mailto:l.schmitt@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline ml-6"><i class="fa-solid fa-envelope w-4 -ml-6 mr-2"></i> E-Mail schreiben</a>
+                        </div>
+                        <div>
+                            <p class="font-bold text-lg text-slate-800">Stephanie Schreiber</p>
+                            <a href="tel:06747934323" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-23</a>
+                            <div class="text-slate-500 text-sm mb-1 ml-6"><i class="fa-solid fa-fax w-4"></i> (06747) 9343-20</div>
+                            <a href="mailto:s.schreiber@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline ml-6"><i class="fa-solid fa-envelope w-4 -ml-6 mr-2"></i> E-Mail schreiben</a>
+                        </div>
+                    </div>
+
+                    <!-- Baustoffe -->
+                    <div class="bg-white p-8 rounded-sm shadow-lg border border-slate-200 hover:-translate-y-1 transition-transform">
+                        <div class="flex items-center gap-4 mb-6 border-b border-slate-100 pb-4">
+                            <div class="bg-brand-red text-white w-10 h-10 rounded-full flex items-center justify-center"><i class="fa-solid fa-cubes"></i></div>
+                            <h4 class="font-header font-bold text-xl text-brand-dark uppercase tracking-wide">Baustoffe</h4>
+                        </div>
+                         <div class="mb-6">
+                            <p class="font-bold text-lg text-slate-800">Ronny Bontenakels</p>
+                            <a href="tel:06747934312" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-12</a>
+                            <div class="text-slate-500 text-sm mb-1 ml-6"><i class="fa-solid fa-fax w-4"></i> (06747) 9343-20</div>
+                             <a href="mailto:r.bontenakels@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline ml-6"><i class="fa-solid fa-envelope w-4 -ml-6 mr-2"></i> E-Mail schreiben</a>
+                        </div>
+                        <div class="mb-6">
+                            <p class="font-bold text-lg text-slate-800">Ralph Engel</p>
+                            <a href="tel:06747934315" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-15</a>
+                            <div class="text-slate-500 text-sm mb-1 ml-6"><i class="fa-solid fa-fax w-5"></i> (06747) 9343-20</div>
+                             <a href="mailto:r.engel@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline ml-6"><i class="fa-solid fa-envelope w-5"></i> E-Mail schreiben</a>
+                        </div>
+                         <div>
+                            <p class="font-bold text-lg text-slate-800">Uwe Retzmann</p>
+                            <a href="tel:06747934311" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-11</a>
+                            <div class="text-slate-500 text-sm mb-1 ml-6"><i class="fa-solid fa-fax w-4"></i> (06747) 9343-20</div>
+                             <a href="mailto:u.retzmann@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline ml-6"><i class="fa-solid fa-envelope w-5"></i> E-Mail schreiben</a>
+                        </div>
+                    </div>
+
+                    <!-- Bauelemente -->
+                    <div class="bg-white p-8 rounded-sm shadow-lg border border-slate-200 hover:-translate-y-1 transition-transform">
+                        <div class="flex items-center gap-4 mb-6 border-b border-slate-100 pb-4">
+                            <div class="bg-brand-red text-white w-10 h-10 rounded-full flex items-center justify-center"><i class="fa-solid fa-door-open"></i></div>
+                            <h4 class="font-header font-bold text-xl text-brand-dark uppercase tracking-wide">Bauelemente</h4>
+                        </div>
+                         <div class="mb-6">
+                            <p class="font-bold text-lg text-slate-800">Ronny Bontenakels</p>
+                            <a href="tel:06747934312" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-12</a>
+                            <div class="text-slate-500 text-sm mb-1 ml-6"><i class="fa-solid fa-fax w-4"></i> (06747) 9343-20</div>
+                             <a href="mailto:r.bontenakels@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline ml-6"><i class="fa-solid fa-envelope w-4 -ml-6 mr-2"></i> E-Mail schreiben</a>
+                        </div>
+                         <div class="mb-6">
+                            <p class="font-bold text-lg text-slate-800">Ralph Engel</p>
+                            <a href="tel:06747934315" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-15</a>
+                            <div class="text-slate-500 text-sm mb-1 ml-6"><i class="fa-solid fa-fax w-4"></i> (06747) 9343-20</div>
+                             <a href="mailto:r.engel@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline ml-6"><i class="fa-solid fa-envelope w-4 -ml-6 mr-2"></i> E-Mail schreiben</a>
+                        </div>
+                         <div>
+                            <p class="font-bold text-lg text-slate-800">Uwe Retzmann</p>
+                            <a href="tel:06747934311" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-11</a>
+                            <div class="text-slate-500 text-sm mb-1 ml-6"><i class="fa-solid fa-fax w-4"></i> (06747) 9343-20</div>
+                             <a href="mailto:u.retzmann@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline ml-6"><i class="fa-solid fa-envelope w-4 -ml-6 mr-2"></i> E-Mail schreiben</a>
+                        </div>
+                    </div>
+
+                    <!-- Trockenbau -->
+                    <div class="bg-white p-8 rounded-sm shadow-lg border border-slate-200 hover:-translate-y-1 transition-transform">
+                        <div class="flex items-center gap-4 mb-6 border-b border-slate-100 pb-4">
+                            <div class="bg-brand-red text-white w-10 h-10 rounded-full flex items-center justify-center"><i class="fa-solid fa-layer-group"></i></div>
+                            <h4 class="font-header font-bold text-xl text-brand-dark uppercase tracking-wide">Trockenbau</h4>
+                        </div>
+                        <div class="mb-6">
+                            <p class="font-bold text-lg text-slate-800">Ralph Engel</p>
+                            <a href="tel:06747934315" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-15</a>
+                            <div class="text-slate-500 text-sm mb-1 ml-6"><i class="fa-solid fa-fax w-4"></i> (06747) 9343-20</div>
+                            <a href="mailto:r.engel@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline ml-6"><i class="fa-solid fa-envelope w-4 -ml-6 mr-2"></i> E-Mail schreiben</a>
+                        </div>
+                        <div class="mb-6">
+                            <p class="font-bold text-lg text-slate-800">Michael Retzmann</p>
+                            <a href="tel:06747934317" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-17</a>
+                            <div class="text-slate-500 text-sm mb-1 ml-6"><i class="fa-solid fa-fax w-4"></i> (06747) 9343-24</div>
+                            <a href="mailto:m.retzmann@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline ml-6"><i class="fa-solid fa-envelope w-4 -ml-6 mr-2"></i> E-Mail schreiben</a>
+                        </div>
+                         <div>
+                            <p class="font-bold text-lg text-slate-800">Uwe Retzmann</p>
+                            <a href="tel:06747934311" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-11</a>
+                            <div class="text-slate-500 text-sm mb-1 ml-6"><i class="fa-solid fa-fax w-4"></i> (06747) 9343-20</div>
+                             <a href="mailto:u.retzmann@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline ml-6"><i class="fa-solid fa-envelope w-4 -ml-6 mr-2"></i> E-Mail schreiben</a>
+                        </div>
+                    </div>
+
+                     <!-- Buchhaltung -->
+                    <div class="bg-white p-8 rounded-sm shadow-lg border border-slate-200 hover:-translate-y-1 transition-transform">
+                         <div class="flex items-center gap-4 mb-6 border-b border-slate-100 pb-4">
+                            <div class="bg-brand-red text-white w-10 h-10 rounded-full flex items-center justify-center"><i class="fa-solid fa-calculator"></i></div>
+                            <h4 class="font-header font-bold text-xl text-brand-dark uppercase tracking-wide">Buchhaltung</h4>
+                        </div>
+                        <div class="mb-4">
+                            <p class="font-bold text-lg text-slate-800">Jennifer Barthel</p>
+                            <a href="tel:06747934310" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-10</a>
+                             <a href="mailto:j.barthel@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline ml-6"><i class="fa-solid fa-envelope w-5"></i> E-Mail schreiben</a>
+                        </div>
+                        <div class="mb-4">
+                            <p class="font-bold text-lg text-slate-800">Anja Kasper</p>
+                            <a href="tel:06747934313" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-13</a>
+                            <div class="text-slate-500 text-sm mb-1 ml-6"><i class="fa-solid fa-fax w-4"></i> (06747) 9343-24</div>
+                             <a href="mailto:a.kasper@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline ml-6"><i class="fa-solid fa-envelope w-4 -ml-6 mr-2"></i> E-Mail schreiben</a>
+                        </div>
+                         <div class="mb-4">
+                            <p class="font-bold text-lg text-slate-800">Elke Retzmann</p>
+                            <a href="tel:06747934325" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-25</a>
+                            <div class="text-slate-500 text-sm mb-1 ml-6"><i class="fa-solid fa-fax w-4"></i> (06747) 9343-24</div>
+                             <a href="mailto:e.retzmann@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline ml-6"><i class="fa-solid fa-envelope w-4 -ml-6 mr-2"></i> E-Mail schreiben</a>
+                        </div>
+                    </div>
+
+                     <!-- Lager -->
+                    <div class="bg-white p-8 rounded-sm shadow-lg border border-slate-200 hover:-translate-y-1 transition-transform">
+                         <div class="flex items-center gap-4 mb-6 border-b border-slate-100 pb-4">
+                            <div class="bg-brand-red text-white w-10 h-10 rounded-full flex items-center justify-center"><i class="fa-solid fa-boxes-stacked"></i></div>
+                            <h4 class="font-header font-bold text-xl text-brand-dark uppercase tracking-wide">Lager / Disposition</h4>
+                        </div>
+                        <div class="mb-4">
+                            <p class="font-bold text-lg text-slate-800">Jörg Retzmann</p>
+                            <a href="tel:06747934314" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-14</a>
+                            <div class="text-slate-500 text-sm mb-1 ml-6"><i class="fa-solid fa-fax w-4"></i> (06747) 9343-20</div>
+                             <a href="mailto:j.retzmann@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline ml-6"><i class="fa-solid fa-envelope w-4 -ml-6 mr-2"></i> E-Mail schreiben</a>
+                        </div>
+                        <div class="mb-4">
+                            <p class="font-bold text-lg text-slate-800">Uli Thomsen</p>
+                            <a href="tel:06747934314" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-14</a>
+                            <div class="text-slate-500 text-sm mb-1 ml-6"><i class="fa-solid fa-fax w-4"></i> (06747) 9343-20</div>
+                             <a href="mailto:info@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline ml-6"><i class="fa-solid fa-envelope w-4 -ml-6 mr-2"></i> E-Mail schreiben</a>
+                        </div>
+                         <div class="mb-4">
+                            <p class="font-bold text-lg text-slate-800">Timo Neitzert</p>
+                            <a href="tel:06747934314" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-14</a>
+                            <div class="text-slate-500 text-sm mb-1 ml-6"><i class="fa-solid fa-fax w-4"></i> (06747) 9343-20</div>
+                             <a href="mailto:info@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline ml-6"><i class="fa-solid fa-envelope w-4 -ml-6 mr-2"></i> E-Mail schreiben</a>
+                        </div>
+                    </div>
+
+                    <!-- Garten -->
+                    <div class="bg-white p-8 rounded-sm shadow-lg border border-slate-200 hover:-translate-y-1 transition-transform">
+                         <div class="flex items-center gap-4 mb-6 border-b border-slate-100 pb-4">
+                            <div class="bg-brand-red text-white w-10 h-10 rounded-full flex items-center justify-center"><i class="fa-solid fa-tree"></i></div>
+                            <h4 class="font-header font-bold text-xl text-brand-dark uppercase tracking-wide">Garten & Terrasse</h4>
+                        </div>
+                        <div class="mb-4">
+                            <p class="font-bold text-lg text-slate-800">Theo Muders</p>
+                            <a href="tel:06747934326" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-26</a>
+                            <div class="text-slate-500 text-sm mb-1 ml-6"><i class="fa-solid fa-fax w-5"></i> (06747) 9343-20</div>
+                             <a href="mailto:t.muders@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline ml-6"><i class="fa-solid fa-envelope w-4 -ml-6 mr-2"></i> E-Mail schreiben</a>
+                        </div>
+                         <div class="mb-4">
+                            <p class="font-bold text-lg text-slate-800">Ralph Engel</p>
+                            <a href="tel:06747934315" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-15</a>
+                            <div class="text-slate-500 text-sm mb-1 ml-6"><i class="fa-solid fa-fax w-4"></i> (06747) 9343-20</div>
+                             <a href="mailto:r.engel@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline ml-6"><i class="fa-solid fa-envelope w-4 -ml-6 mr-2"></i> E-Mail schreiben</a>
+                        </div>
+                         <div class="mb-4">
+                            <p class="font-bold text-lg text-slate-800">Uwe Retzmann</p>
+                            <a href="tel:06747934311" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-11</a>
+                            <div class="text-slate-500 text-sm mb-1 ml-6"><i class="fa-solid fa-fax w-4"></i> (06747) 9343-20</div>
+                             <a href="mailto:u.retzmann@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline ml-6"><i class="fa-solid fa-envelope w-4 -ml-6 mr-2"></i> E-Mail schreiben</a>
+                        </div>
+                         <div class="mb-4">
+                            <p class="font-bold text-lg text-slate-800">Thomas Fuchs</p>
+                            <a href="tel:06747934319" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> 06747/9343-19</a>
+                            <div class="text-slate-500 text-sm mb-1 ml-6"><i class="fa-solid fa-fax w-4"></i> (06747) 9343-20</div>
+                             <a href="mailto:t.fuchs@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline ml-6"><i class="fa-solid fa-envelope w-4 -ml-6 mr-2"></i> E-Mail schreiben</a>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="container mx-auto px-6 py-16 animate-fade-in">
+             </div>
+        </div>
+
+        <!-- ==================== VIEW: ANFAHRT ==================== -->
+        <div id="view-anfahrt" class="view-section">
+            <div class="bg-brand-dark py-24 text-center mt-8 animate-slide-up">
+                 <div class="container mx-auto px-6">
+                    <h1 class="font-header text-5xl md:text-6xl font-bold text-white mb-4 uppercase">Ihr Weg zu uns</h1>
+                    <p class="text-slate-400 text-xl max-w-2xl mx-auto font-light">Besuchen Sie uns in Halsenbach.</p>
+                 </div>
+             </div>
+             <div class="container mx-auto px-6 py-16 animate-fade-in">
+                 <div class="max-w-4xl mx-auto bg-white p-8 rounded-sm shadow-xl border border-slate-200">
+                     <div class="mb-8 text-center">
+                         <h3 class="font-header text-2xl font-bold text-brand-dark mb-2">Bauzentrum Retzmann GmbH</h3>
+                         <p class="text-slate-600 text-lg">Am Eichelgärtchen 2 b<br>56283 Halsenbach</p>
+                     </div>
+                     <div class="aspect-video w-full rounded-sm overflow-hidden border border-slate-200">
+                         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2558.2123456789!2d7.565!3d50.165!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sBauzentrum%20Retzmann%20GmbH!5e0!3m2!1sde!2sde!4v1600000000000!5m2!1sde!2sde" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                     </div>
+                     <div class="mt-8 text-center">
+                         <a href="https://www.google.com/maps/dir//Bauzentrum+Retzmann+GmbH,+Am+Eichelgärtchen+2+b,+56283+Halsenbach" target="_blank" class="inline-flex items-center gap-2 bg-brand-red text-white px-8 py-3 rounded-sm font-bold shadow-lg hover:bg-brand-darkRed transition-all uppercase tracking-wide">
+                             <i class="fa-solid fa-location-arrow"></i> Route planen
+                         </a>
+                     </div>
+                 </div>
+             </div>
+        </div>
+
+        <!-- ==================== VIEW: ÖFFNUNGSZEITEN ==================== -->
+        <div id="view-oeffnungszeiten" class="view-section">
+            <div class="bg-brand-dark py-24 text-center mt-8 animate-slide-up">
+                 <div class="container mx-auto px-6">
+                    <h1 class="font-header text-5xl md:text-6xl font-bold text-white mb-4 uppercase">Öffnungszeiten</h1>
+                    <p class="text-slate-400 text-xl max-w-2xl mx-auto font-light">Wir sind für Sie da.</p>
+                 </div>
+             </div>
+             <div class="container mx-auto px-6 py-16 animate-fade-in">
+                 <div class="max-w-3xl mx-auto bg-white p-12 rounded-sm shadow-xl border border-slate-200 text-center">
+                     <div class="inline-block p-4 rounded-full bg-brand-light text-brand-red text-3xl mb-6">
+                         <i class="fa-regular fa-clock"></i>
+                     </div>
+                     <h3 class="font-header text-3xl font-bold text-brand-dark mb-8 uppercase">Unsere Zeiten</h3>
+                     <div class="space-y-4 text-lg">
+                         <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                             <span class="font-bold text-slate-700">Montag - Freitag</span>
+                             <span class="text-brand-red font-bold">7:00 - 18:00 Uhr</span>
+                         </div>
+                         <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                             <span class="font-bold text-slate-700">Samstag</span>
+                             <span class="text-brand-red font-bold">8:00 - 13:00 Uhr</span>
+                         </div>
+                     </div>
+                     <div class="mt-8 pt-6 border-t border-slate-100">
+                         <p class="text-slate-500 text-sm">An Sonn- und Feiertagen geschlossen.</p>
+                     </div>
+                 </div>
+             </div>
+        </div>
+
+        <!-- ==================== VIEW: i&M PARTNER ==================== -->
+        <div id="view-partner-im" class="view-section">
+            <div class="bg-brand-dark py-24 text-center mt-8 animate-slide-up">
+                 <div class="container mx-auto px-6">
+                    <span class="text-brand-red font-bold tracking-widest uppercase text-sm block mb-4">Partner</span>
+                    <h1 class="font-header text-5xl md:text-6xl font-bold text-white mb-6 uppercase">i&M Bauzentrum</h1>
+                 </div>
+             </div>
+             <div class="container mx-auto px-6 py-16 animate-fade-in">
+                 <div class="max-w-7xl mx-auto">
+                     <img src="https://api.eurobaustoff.de/fileadmin/_processed_/9/7/csm_webcontent-iundm-bauelemente-splash_a3bfae535e.jpg" class="w-full rounded-sm shadow-xl mb-12 h-auto" alt="i&M Bauzentrum">
+                     <div class="flex flex-col lg:flex-row gap-12">
+                         <div class="lg:w-2/3">
+                             <h3 class="font-header text-3xl font-bold text-slate-900 mb-6 leading-tight">Die starke Fachhandelsmarke der EUROBAUSTOFF</h3>
+                             <div class="prose text-slate-600 space-y-4 leading-relaxed text-lg">
+                                 <p>i&M Bauzentrum ist die Adresse für qualitätsbewusste Profis und Privatkunden, die individuelle Wohn(t)räume realisieren wollen. Als Fachhandelsmarke der EUROBAUSTOFF, Europas führender Kooperation für Baustoffe, Holz & Fliesen, steht i&M Bauzentrum ausnahmslos für Qualität.</p>
+                                 <p>Über 120 inhabergeführte Standorte vereinen sich deutschlandweit unter der Marke i&M Bauzentrum zu einer starken Werbe- und Vertriebsgemeinschaft.</p>
+                                 <p><strong>i&M steht für „ideen & Machen“.</strong></p>
+                             </div>
+                         </div>
+                         <div class="lg:w-1/3 bg-brand-light p-8 rounded-sm">
+                             <h4 class="font-bold text-xl mb-4">Das Versprechen</h4>
+                             <ul class="space-y-2 text-slate-600">
+                                 <li><i class="fa-solid fa-check text-brand-red mr-2"></i> Qualitätsvolle Sortimente</li>
+                                 <li><i class="fa-solid fa-check text-brand-red mr-2"></i> Inspirierende Ausstellungen</li>
+                                 <li><i class="fa-solid fa-check text-brand-red mr-2"></i> Fachberatung durch Spezialisten</li>
+                             </ul>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+        </div>
+
+        <!-- ==================== VIEW: DHB PARTNER ==================== -->
+        <div id="view-partner-dhb" class="view-section">
+            <div class="bg-brand-dark py-24 text-center mt-8 animate-slide-up">
+                 <div class="container mx-auto px-6">
+                    <span class="text-brand-red font-bold tracking-widest uppercase text-sm block mb-4">Sponsoring</span>
+                    <h1 class="font-header text-5xl md:text-6xl font-bold text-white mb-6 uppercase">Deutscher Handballbund</h1>
+                 </div>
+             </div>
+             <div class="container mx-auto px-6 py-16 animate-fade-in">
+                 <div class="max-w-7xl mx-auto">
+                     <img src="https://api.eurobaustoff.de/fileadmin/_processed_/f/3/csm_wm-23-sascha-klahn_00059927---kopie_afc138a452.jpg" class="w-full rounded-sm shadow-xl mb-12 h-auto" alt="DHB Nationalmannschaft">
+                     <div class="flex flex-col lg:flex-row gap-12">
+                         <div class="lg:w-2/3">
+                             <h3 class="font-header text-3xl font-bold text-slate-900 mb-6 leading-tight">Offizieller Partner der Nationalmannschaft</h3>
+                             <div class="prose text-slate-600 space-y-4 leading-relaxed text-lg">
+                                 <p>i&M Bauzentrum ist seit 01.01.2018 Offizieller Partner der Männer-Nationalmannschaft des Deutschen Handballbund (DHB). Genau wie i&M Bauzentrum ist diese Mannschaft hochengagiert, leistungsbereit und authentisch.</p>
+                                 <p>Vor allem aber: Sie versteht sich als Team. Starallüren: Fehlanzeige. Und das bei extrem hohem Engagement. Genau wie i&M Bauzentrum.</p>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+        </div>
+
+        <!-- ==================== VIEW: SERVICES (UNSERE LEISTUNGEN) ==================== -->
+        <div id="view-services" class="view-section">
+             <div class="bg-brand-dark py-24 text-center mt-8 animate-slide-up">
+                 <div class="container mx-auto px-6">
+                    <span class="text-brand-red font-bold tracking-widest uppercase text-sm block mb-4">Übersicht</span>
+                    <h1 class="font-header text-5xl md:text-6xl font-bold text-white mb-6 uppercase">Unsere Serviceleistungen</h1>
+                    <p class="text-slate-400 text-xl max-w-2xl mx-auto font-light">Wir unterstützen Sie bei Ihrem Bauvorhaben mit Rat und Tat.</p>
+                 </div>
+             </div>
+             <div class="container mx-auto px-6 py-16 animate-fade-in">
                  <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                      <!-- Service Items -->
                      <div class="service-box bg-white p-6 rounded-sm shadow-md border border-slate-100 hover:shadow-xl transition-all group">
@@ -1129,7 +1509,433 @@
                          <p class="text-slate-600 text-sm">Wir sorgen für „trockene Füße“. Verladen Sie die gekauften Baustoffe in unserer überdachten Ladezone.</p>
                      </div>
                  </div>
-            </div>
+             </div>
+        </div>
+
+        <!-- ==================== VIEW: ANSPRECHPARTNER (COMPLETE LIST) ==================== -->
+        <div id="view-ansprechpartner" class="view-section">
+            <div class="bg-brand-dark py-24 text-center mt-8 animate-slide-up">
+                 <div class="container mx-auto px-6">
+                    <h1 class="font-header text-5xl md:text-6xl font-bold text-white mb-4 uppercase">Ihre Ansprechpartner</h1>
+                    <p class="text-slate-400 text-xl max-w-2xl mx-auto font-light">Kompetenz hat einen Namen. Finden Sie den richtigen Experten für Ihr Anliegen.</p>
+                 </div>
+             </div>
+             <div class="container mx-auto px-6 py-16 animate-fade-in">
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    
+                    <!-- Zentrale -->
+                    <div class="bg-white p-8 rounded-sm shadow-lg border border-slate-200 hover:-translate-y-1 transition-transform">
+                        <div class="flex items-center gap-4 mb-6 border-b border-slate-100 pb-4">
+                            <div class="bg-brand-red text-white w-10 h-10 rounded-full flex items-center justify-center"><i class="fa-solid fa-users"></i></div>
+                            <h4 class="font-header font-bold text-xl text-brand-dark uppercase tracking-wide">Zentrale</h4>
+                        </div>
+                        <div class="mb-4">
+                            <p class="font-bold text-lg text-slate-800">Sabine Christmann</p>
+                            <a href="tel:06747934322" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-22</a>
+                            <div class="text-slate-500 text-sm mb-1"><i class="fa-solid fa-fax w-5"></i> (06747) 9343-20</div>
+                            <a href="mailto:s.christmann@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline"><i class="fa-solid fa-envelope w-5"></i> E-Mail schreiben</a>
+                        </div>
+                    </div>
+
+                    <!-- Baufachmarkt -->
+                    <div class="bg-white p-8 rounded-sm shadow-lg border border-slate-200 hover:-translate-y-1 transition-transform">
+                        <div class="flex items-center gap-4 mb-6 border-b border-slate-100 pb-4">
+                            <div class="bg-brand-red text-white w-10 h-10 rounded-full flex items-center justify-center"><i class="fa-solid fa-hammer"></i></div>
+                            <h4 class="font-header font-bold text-xl text-brand-dark uppercase tracking-wide">Baufachmarkt</h4>
+                        </div>
+                        <div class="mb-6">
+                            <p class="font-bold text-lg text-slate-800">Theo Muders</p>
+                            <a href="tel:06747934326" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-26</a>
+                            <div class="text-slate-500 text-sm mb-1"><i class="fa-solid fa-fax w-5"></i> (06747) 9343-20</div>
+                            <a href="mailto:t.muders@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline"><i class="fa-solid fa-envelope w-5"></i> E-Mail schreiben</a>
+                        </div>
+                        <div>
+                            <p class="font-bold text-lg text-slate-800">Thomas Fuchs</p>
+                            <a href="tel:06747934319" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> 06747/9343-19</a>
+                            <div class="text-slate-500 text-sm mb-1"><i class="fa-solid fa-fax w-5"></i> (06747) 9343-20</div>
+                            <a href="mailto:t.fuchs@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline"><i class="fa-solid fa-envelope w-5"></i> E-Mail schreiben</a>
+                        </div>
+                    </div>
+
+                    <!-- Fliesen -->
+                    <div class="bg-white p-8 rounded-sm shadow-lg border border-slate-200 hover:-translate-y-1 transition-transform">
+                        <div class="flex items-center gap-4 mb-6 border-b border-slate-100 pb-4">
+                            <div class="bg-brand-red text-white w-10 h-10 rounded-full flex items-center justify-center"><i class="fa-solid fa-border-all"></i></div>
+                            <h4 class="font-header font-bold text-xl text-brand-dark uppercase tracking-wide">Fliesen</h4>
+                        </div>
+                        <div class="mb-6">
+                            <p class="font-bold text-lg text-slate-800">Leni Schmitt</p>
+                            <a href="tel:06747934323" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-23</a>
+                            <div class="text-slate-500 text-sm mb-1"><i class="fa-solid fa-fax w-5"></i> (06747) 9343-20</div>
+                            <a href="mailto:l.schmitt@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline"><i class="fa-solid fa-envelope w-5"></i> E-Mail schreiben</a>
+                        </div>
+                        <div>
+                            <p class="font-bold text-lg text-slate-800">Stephanie Schreiber</p>
+                            <a href="tel:06747934323" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-23</a>
+                            <div class="text-slate-500 text-sm mb-1"><i class="fa-solid fa-fax w-5"></i> (06747) 9343-20</div>
+                            <a href="mailto:s.schreiber@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline"><i class="fa-solid fa-envelope w-5"></i> E-Mail schreiben</a>
+                        </div>
+                    </div>
+
+                    <!-- Baustoffe -->
+                    <div class="bg-white p-8 rounded-sm shadow-lg border border-slate-200 hover:-translate-y-1 transition-transform">
+                        <div class="flex items-center gap-4 mb-6 border-b border-slate-100 pb-4">
+                            <div class="bg-brand-red text-white w-10 h-10 rounded-full flex items-center justify-center"><i class="fa-solid fa-cubes"></i></div>
+                            <h4 class="font-header font-bold text-xl text-brand-dark uppercase tracking-wide">Baustoffe</h4>
+                        </div>
+                         <div class="mb-6">
+                            <p class="font-bold text-lg text-slate-800">Ronny Bontenakels</p>
+                            <a href="tel:06747934312" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-12</a>
+                            <div class="text-slate-500 text-sm mb-1"><i class="fa-solid fa-fax w-5"></i> (06747) 9343-20</div>
+                             <a href="mailto:r.bontenakels@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline"><i class="fa-solid fa-envelope w-5"></i> E-Mail schreiben</a>
+                        </div>
+                        <div class="mb-6">
+                            <p class="font-bold text-lg text-slate-800">Ralph Engel</p>
+                            <a href="tel:06747934315" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-15</a>
+                            <div class="text-slate-500 text-sm mb-1"><i class="fa-solid fa-fax w-5"></i> (06747) 9343-20</div>
+                             <a href="mailto:r.engel@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline"><i class="fa-solid fa-envelope w-5"></i> E-Mail schreiben</a>
+                        </div>
+                         <div>
+                            <p class="font-bold text-lg text-slate-800">Uwe Retzmann</p>
+                            <a href="tel:06747934311" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-11</a>
+                            <div class="text-slate-500 text-sm mb-1"><i class="fa-solid fa-fax w-5"></i> (06747) 9343-20</div>
+                             <a href="mailto:u.retzmann@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline"><i class="fa-solid fa-envelope w-5"></i> E-Mail schreiben</a>
+                        </div>
+                    </div>
+
+                    <!-- Bauelemente -->
+                    <div class="bg-white p-8 rounded-sm shadow-lg border border-slate-200 hover:-translate-y-1 transition-transform">
+                        <div class="flex items-center gap-4 mb-6 border-b border-slate-100 pb-4">
+                            <div class="bg-brand-red text-white w-10 h-10 rounded-full flex items-center justify-center"><i class="fa-solid fa-door-open"></i></div>
+                            <h4 class="font-header font-bold text-xl text-brand-dark uppercase tracking-wide">Bauelemente</h4>
+                        </div>
+                         <div class="mb-6">
+                            <p class="font-bold text-lg text-slate-800">Ronny Bontenakels</p>
+                            <a href="tel:06747934312" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-12</a>
+                            <div class="text-slate-500 text-sm mb-1"><i class="fa-solid fa-fax w-5"></i> (06747) 9343-20</div>
+                             <a href="mailto:r.bontenakels@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline"><i class="fa-solid fa-envelope w-5"></i> E-Mail schreiben</a>
+                        </div>
+                         <div class="mb-6">
+                            <p class="font-bold text-lg text-slate-800">Ralph Engel</p>
+                            <a href="tel:06747934315" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-15</a>
+                            <div class="text-slate-500 text-sm mb-1"><i class="fa-solid fa-fax w-5"></i> (06747) 9343-20</div>
+                             <a href="mailto:r.engel@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline"><i class="fa-solid fa-envelope w-5"></i> E-Mail schreiben</a>
+                        </div>
+                         <div>
+                            <p class="font-bold text-lg text-slate-800">Uwe Retzmann</p>
+                            <a href="tel:06747934311" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-11</a>
+                            <div class="text-slate-500 text-sm mb-1"><i class="fa-solid fa-fax w-5"></i> (06747) 9343-20</div>
+                             <a href="mailto:u.retzmann@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline"><i class="fa-solid fa-envelope w-5"></i> E-Mail schreiben</a>
+                        </div>
+                    </div>
+
+                    <!-- Trockenbau -->
+                    <div class="bg-white p-8 rounded-sm shadow-lg border border-slate-200 hover:-translate-y-1 transition-transform">
+                        <div class="flex items-center gap-4 mb-6 border-b border-slate-100 pb-4">
+                            <div class="bg-brand-red text-white w-10 h-10 rounded-full flex items-center justify-center"><i class="fa-solid fa-layer-group"></i></div>
+                            <h4 class="font-header font-bold text-xl text-brand-dark uppercase tracking-wide">Trockenbau</h4>
+                        </div>
+                        <div class="mb-6">
+                            <p class="font-bold text-lg text-slate-800">Ralph Engel</p>
+                            <a href="tel:06747934315" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-15</a>
+                            <div class="text-slate-500 text-sm mb-1"><i class="fa-solid fa-fax w-5"></i> (06747) 9343-20</div>
+                            <a href="mailto:r.engel@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline"><i class="fa-solid fa-envelope w-5"></i> E-Mail schreiben</a>
+                        </div>
+                        <div class="mb-6">
+                            <p class="font-bold text-lg text-slate-800">Michael Retzmann</p>
+                            <a href="tel:06747934317" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-17</a>
+                            <div class="text-slate-500 text-sm mb-1"><i class="fa-solid fa-fax w-5"></i> (06747) 9343-24</div>
+                            <a href="mailto:m.retzmann@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline"><i class="fa-solid fa-envelope w-5"></i> E-Mail schreiben</a>
+                        </div>
+                         <div>
+                            <p class="font-bold text-lg text-slate-800">Uwe Retzmann</p>
+                            <a href="tel:06747934311" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-11</a>
+                            <div class="text-slate-500 text-sm mb-1"><i class="fa-solid fa-fax w-5"></i> (06747) 9343-20</div>
+                             <a href="mailto:u.retzmann@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline"><i class="fa-solid fa-envelope w-5"></i> E-Mail schreiben</a>
+                        </div>
+                    </div>
+
+                     <!-- Buchhaltung -->
+                    <div class="bg-white p-8 rounded-sm shadow-lg border border-slate-200 hover:-translate-y-1 transition-transform">
+                         <div class="flex items-center gap-4 mb-6 border-b border-slate-100 pb-4">
+                            <div class="bg-brand-red text-white w-10 h-10 rounded-full flex items-center justify-center"><i class="fa-solid fa-calculator"></i></div>
+                            <h4 class="font-header font-bold text-xl text-brand-dark uppercase tracking-wide">Buchhaltung</h4>
+                        </div>
+                        <div class="mb-4">
+                            <p class="font-bold text-lg text-slate-800">Jennifer Barthel</p>
+                            <a href="tel:06747934310" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-10</a>
+                             <a href="mailto:j.barthel@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline"><i class="fa-solid fa-envelope w-5"></i> E-Mail schreiben</a>
+                        </div>
+                        <div class="mb-4">
+                            <p class="font-bold text-lg text-slate-800">Anja Kasper</p>
+                            <a href="tel:06747934313" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-13</a>
+                            <div class="text-slate-500 text-sm mb-1"><i class="fa-solid fa-fax w-5"></i> (06747) 9343-24</div>
+                             <a href="mailto:a.kasper@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline"><i class="fa-solid fa-envelope w-5"></i> E-Mail schreiben</a>
+                        </div>
+                         <div class="mb-4">
+                            <p class="font-bold text-lg text-slate-800">Elke Retzmann</p>
+                            <a href="tel:06747934325" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-25</a>
+                            <div class="text-slate-500 text-sm mb-1"><i class="fa-solid fa-fax w-5"></i> (06747) 9343-24</div>
+                             <a href="mailto:e.retzmann@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline"><i class="fa-solid fa-envelope w-5"></i> E-Mail schreiben</a>
+                        </div>
+                    </div>
+
+                     <!-- Lager -->
+                    <div class="bg-white p-8 rounded-sm shadow-lg border border-slate-200 hover:-translate-y-1 transition-transform">
+                         <div class="flex items-center gap-4 mb-6 border-b border-slate-100 pb-4">
+                            <div class="bg-brand-red text-white w-10 h-10 rounded-full flex items-center justify-center"><i class="fa-solid fa-boxes-stacked"></i></div>
+                            <h4 class="font-header font-bold text-xl text-brand-dark uppercase tracking-wide">Lager / Disposition</h4>
+                        </div>
+                        <div class="mb-4">
+                            <p class="font-bold text-lg text-slate-800">Jörg Retzmann</p>
+                            <a href="tel:06747934314" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-14</a>
+                            <div class="text-slate-500 text-sm mb-1"><i class="fa-solid fa-fax w-5"></i> (06747) 9343-20</div>
+                             <a href="mailto:j.retzmann@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline"><i class="fa-solid fa-envelope w-5"></i> E-Mail schreiben</a>
+                        </div>
+                        <div class="mb-4">
+                            <p class="font-bold text-lg text-slate-800">Uli Thomsen</p>
+                            <a href="tel:06747934314" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-14</a>
+                            <div class="text-slate-500 text-sm mb-1"><i class="fa-solid fa-fax w-5"></i> (06747) 9343-20</div>
+                             <a href="mailto:info@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline"><i class="fa-solid fa-envelope w-5"></i> E-Mail schreiben</a>
+                        </div>
+                         <div class="mb-4">
+                            <p class="font-bold text-lg text-slate-800">Timo Neitzert</p>
+                            <a href="tel:06747934314" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-14</a>
+                            <div class="text-slate-500 text-sm mb-1"><i class="fa-solid fa-fax w-5"></i> (06747) 9343-20</div>
+                             <a href="mailto:info@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline"><i class="fa-solid fa-envelope w-5"></i> E-Mail schreiben</a>
+                        </div>
+                    </div>
+
+                    <!-- Garten -->
+                    <div class="bg-white p-8 rounded-sm shadow-lg border border-slate-200 hover:-translate-y-1 transition-transform">
+                         <div class="flex items-center gap-4 mb-6 border-b border-slate-100 pb-4">
+                            <div class="bg-brand-red text-white w-10 h-10 rounded-full flex items-center justify-center"><i class="fa-solid fa-tree"></i></div>
+                            <h4 class="font-header font-bold text-xl text-brand-dark uppercase tracking-wide">Garten & Terrasse</h4>
+                        </div>
+                        <div class="mb-4">
+                            <p class="font-bold text-lg text-slate-800">Theo Muders</p>
+                            <a href="tel:06747934326" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-26</a>
+                            <div class="text-slate-500 text-sm mb-1"><i class="fa-solid fa-fax w-5"></i> (06747) 9343-20</div>
+                             <a href="mailto:t.muders@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline"><i class="fa-solid fa-envelope w-5"></i> E-Mail schreiben</a>
+                        </div>
+                         <div class="mb-4">
+                            <p class="font-bold text-lg text-slate-800">Ralph Engel</p>
+                            <a href="tel:06747934315" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-15</a>
+                            <div class="text-slate-500 text-sm mb-1"><i class="fa-solid fa-fax w-5"></i> (06747) 9343-20</div>
+                             <a href="mailto:r.engel@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline"><i class="fa-solid fa-envelope w-5"></i> E-Mail schreiben</a>
+                        </div>
+                         <div class="mb-4">
+                            <p class="font-bold text-lg text-slate-800">Uwe Retzmann</p>
+                            <a href="tel:06747934311" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> (06747) 9343-11</a>
+                            <div class="text-slate-500 text-sm mb-1"><i class="fa-solid fa-fax w-5"></i> (06747) 9343-20</div>
+                             <a href="mailto:u.retzmann@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline"><i class="fa-solid fa-envelope w-5"></i> E-Mail schreiben</a>
+                        </div>
+                         <div class="mb-4">
+                            <p class="font-bold text-lg text-slate-800">Thomas Fuchs</p>
+                            <a href="tel:06747934319" class="block text-slate-600 hover:text-brand-red mt-1"><i class="fa-solid fa-phone w-5 text-brand-red"></i> 06747/9343-19</a>
+                            <div class="text-slate-500 text-sm mb-1"><i class="fa-solid fa-fax w-5"></i> (06747) 9343-20</div>
+                             <a href="mailto:t.fuchs@retzmann-bauzentrum.de" class="block text-brand-red text-sm mt-2 hover:underline"><i class="fa-solid fa-envelope w-5"></i> E-Mail schreiben</a>
+                        </div>
+                    </div>
+                </div>
+             </div>
+        </div>
+
+        <!-- ==================== VIEW: ANFAHRT ==================== -->
+        <div id="view-anfahrt" class="view-section">
+            <!-- (Inhalt bleibt gleich, da nicht verändert) -->
+             <div class="bg-brand-dark py-24 text-center mt-8 animate-slide-up">
+                 <div class="container mx-auto px-6">
+                    <h1 class="font-header text-5xl md:text-6xl font-bold text-white mb-4 uppercase">Ihr Weg zu uns</h1>
+                    <p class="text-slate-400 text-xl max-w-2xl mx-auto font-light">Besuchen Sie uns in Halsenbach.</p>
+                 </div>
+             </div>
+             <div class="container mx-auto px-6 py-16 animate-fade-in">
+                 <div class="max-w-4xl mx-auto bg-white p-8 rounded-sm shadow-xl border border-slate-200">
+                     <div class="mb-8 text-center">
+                         <h3 class="font-header text-2xl font-bold text-brand-dark mb-2">Bauzentrum Retzmann GmbH</h3>
+                         <p class="text-slate-600 text-lg">Am Eichelgärtchen 2 b<br>56283 Halsenbach</p>
+                     </div>
+                     <div class="aspect-video w-full rounded-sm overflow-hidden border border-slate-200">
+                         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2558.2123456789!2d7.565!3d50.165!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sBauzentrum%20Retzmann%20GmbH!5e0!3m2!1sde!2sde!4v1600000000000!5m2!1sde!2sde" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                     </div>
+                     <div class="mt-8 text-center">
+                         <a href="https://www.google.com/maps/dir//Bauzentrum+Retzmann+GmbH,+Am+Eichelgärtchen+2+b,+56283+Halsenbach" target="_blank" class="inline-flex items-center gap-2 bg-brand-red text-white px-8 py-3 rounded-sm font-bold shadow-lg hover:bg-brand-darkRed transition-all uppercase tracking-wide">
+                             <i class="fa-solid fa-location-arrow"></i> Route planen
+                         </a>
+                     </div>
+                 </div>
+             </div>
+        </div>
+
+        <!-- ==================== VIEW: ÖFFNUNGSZEITEN ==================== -->
+        <div id="view-oeffnungszeiten" class="view-section">
+            <!-- (Inhalt bleibt gleich) -->
+            <div class="bg-brand-dark py-24 text-center mt-8 animate-slide-up">
+                 <div class="container mx-auto px-6">
+                    <h1 class="font-header text-5xl md:text-6xl font-bold text-white mb-4 uppercase">Öffnungszeiten</h1>
+                    <p class="text-slate-400 text-xl max-w-2xl mx-auto font-light">Wir sind für Sie da.</p>
+                 </div>
+             </div>
+             <div class="container mx-auto px-6 py-16 animate-fade-in">
+                 <div class="max-w-3xl mx-auto bg-white p-12 rounded-sm shadow-xl border border-slate-200 text-center">
+                     <div class="inline-block p-4 rounded-full bg-brand-light text-brand-red text-3xl mb-6">
+                         <i class="fa-regular fa-clock"></i>
+                     </div>
+                     <h3 class="font-header text-3xl font-bold text-brand-dark mb-8 uppercase">Unsere Zeiten</h3>
+                     <div class="space-y-4 text-lg">
+                         <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                             <span class="font-bold text-slate-700">Montag - Freitag</span>
+                             <span class="text-brand-red font-bold">7:00 - 18:00 Uhr</span>
+                         </div>
+                         <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                             <span class="font-bold text-slate-700">Samstag</span>
+                             <span class="text-brand-red font-bold">8:00 - 13:00 Uhr</span>
+                         </div>
+                     </div>
+                     <div class="mt-8 pt-6 border-t border-slate-100">
+                         <p class="text-slate-500 text-sm">An Sonn- und Feiertagen geschlossen.</p>
+                     </div>
+                 </div>
+             </div>
+        </div>
+
+        <!-- ==================== VIEW: i&M PARTNER ==================== -->
+        <div id="view-partner-im" class="view-section">
+            <div class="bg-brand-dark py-24 text-center mt-8 animate-slide-up">
+                 <div class="container mx-auto px-6">
+                    <span class="text-brand-red font-bold tracking-widest uppercase text-sm block mb-4">Partner</span>
+                    <h1 class="font-header text-5xl md:text-6xl font-bold text-white mb-6 uppercase">i&M Bauzentrum</h1>
+                 </div>
+             </div>
+             <div class="container mx-auto px-6 py-16 animate-fade-in">
+                 <div class="max-w-7xl mx-auto">
+                     <img src="https://api.eurobaustoff.de/fileadmin/_processed_/9/7/csm_webcontent-iundm-bauelemente-splash_a3bfae535e.jpg" class="w-full rounded-sm shadow-xl mb-12 h-auto" alt="i&M Bauzentrum">
+                     <div class="flex flex-col lg:flex-row gap-12">
+                         <div class="lg:w-2/3">
+                             <h3 class="font-header text-3xl font-bold text-slate-900 mb-6 leading-tight">Die starke Fachhandelsmarke der EUROBAUSTOFF</h3>
+                             <div class="prose text-slate-600 space-y-4 leading-relaxed text-lg">
+                                 <p>i&M Bauzentrum ist die Adresse für qualitätsbewusste Profis und Privatkunden, die individuelle Wohn(t)räume realisieren wollen. Als Fachhandelsmarke der EUROBAUSTOFF, Europas führender Kooperation für Baustoffe, Holz & Fliesen, steht i&M Bauzentrum ausnahmslos für Qualität.</p>
+                                 <p>Über 120 inhabergeführte Standorte vereinen sich deutschlandweit unter der Marke i&M Bauzentrum zu einer starken Werbe- und Vertriebsgemeinschaft.</p>
+                                 <p><strong>i&M steht für „ideen & Machen“.</strong></p>
+                             </div>
+                         </div>
+                         <div class="lg:w-1/3 bg-brand-light p-8 rounded-sm">
+                             <h4 class="font-bold text-xl mb-4">Das Versprechen</h4>
+                             <ul class="space-y-2 text-slate-600">
+                                 <li><i class="fa-solid fa-check text-brand-red mr-2"></i> Qualitätsvolle Sortimente</li>
+                                 <li><i class="fa-solid fa-check text-brand-red mr-2"></i> Inspirierende Ausstellungen</li>
+                                 <li><i class="fa-solid fa-check text-brand-red mr-2"></i> Fachberatung durch Spezialisten</li>
+                             </ul>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+        </div>
+
+        <!-- ==================== VIEW: DHB PARTNER ==================== -->
+        <div id="view-partner-dhb" class="view-section">
+            <div class="bg-brand-dark py-24 text-center mt-8 animate-slide-up">
+                 <div class="container mx-auto px-6">
+                    <span class="text-brand-red font-bold tracking-widest uppercase text-sm block mb-4">Sponsoring</span>
+                    <h1 class="font-header text-5xl md:text-6xl font-bold text-white mb-6 uppercase">Deutscher Handballbund</h1>
+                 </div>
+             </div>
+             <div class="container mx-auto px-6 py-16 animate-fade-in">
+                 <div class="max-w-7xl mx-auto">
+                     <img src="https://api.eurobaustoff.de/fileadmin/_processed_/f/3/csm_wm-23-sascha-klahn_00059927---kopie_afc138a452.jpg" class="w-full rounded-sm shadow-xl mb-12 h-auto" alt="DHB Nationalmannschaft">
+                     <div class="flex flex-col lg:flex-row gap-12">
+                         <div class="lg:w-2/3">
+                             <h3 class="font-header text-3xl font-bold text-slate-900 mb-6 leading-tight">Offizieller Partner der Nationalmannschaft</h3>
+                             <div class="prose text-slate-600 space-y-4 leading-relaxed text-lg">
+                                 <p>i&M Bauzentrum ist seit 01.01.2018 Offizieller Partner der Männer-Nationalmannschaft des Deutschen Handballbund (DHB). Genau wie i&M Bauzentrum ist diese Mannschaft hochengagiert, leistungsbereit und authentisch.</p>
+                                 <p>Vor allem aber: Sie versteht sich als Team. Starallüren: Fehlanzeige. Und das bei extrem hohem Engagement. Genau wie i&M Bauzentrum.</p>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+        </div>
+
+        <!-- ==================== VIEW: SERVICES (UNSERE LEISTUNGEN) ==================== -->
+        <div id="view-services" class="view-section">
+             <div class="bg-brand-dark py-24 text-center mt-8 animate-slide-up">
+                 <div class="container mx-auto px-6">
+                    <span class="text-brand-red font-bold tracking-widest uppercase text-sm block mb-4">Übersicht</span>
+                    <h1 class="font-header text-5xl md:text-6xl font-bold text-white mb-6 uppercase">Unsere Serviceleistungen</h1>
+                    <p class="text-slate-400 text-xl max-w-2xl mx-auto font-light">Wir unterstützen Sie bei Ihrem Bauvorhaben mit Rat und Tat.</p>
+                 </div>
+             </div>
+             <div class="container mx-auto px-6 py-16 animate-fade-in">
+                 <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                     <!-- Service Items -->
+                     <div class="service-box bg-white p-6 rounded-sm shadow-md border border-slate-100 hover:shadow-xl transition-all group">
+                         <div class="service-icon w-12 h-12 bg-slate-100 text-brand-red rounded-full flex items-center justify-center text-xl mb-4 transition-colors"><i class="fa-solid fa-ruler-combined"></i></div>
+                         <h4 class="font-header font-bold text-lg text-slate-900 mb-2">Aufmaß</h4>
+                         <p class="text-slate-600 text-sm">Gerne berät Sie unser Fachpersonal vor Ort und nimmt Aufmaß für die geplante Maßnahme.</p>
+                     </div>
+                     <div class="service-box bg-white p-6 rounded-sm shadow-md border border-slate-100 hover:shadow-xl transition-all group">
+                         <div class="service-icon w-12 h-12 bg-slate-100 text-brand-red rounded-full flex items-center justify-center text-xl mb-4 transition-colors"><i class="fa-solid fa-trash-can"></i></div>
+                         <h4 class="font-header font-bold text-lg text-slate-900 mb-2">Baucontainer</h4>
+                         <p class="text-slate-600 text-sm">Gerne stellen wir Ihnen für die Dauer Ihrer Baumaßnahme einen Baucontainer zur Verfügung.</p>
+                     </div>
+                     <div class="service-box bg-white p-6 rounded-sm shadow-md border border-slate-100 hover:shadow-xl transition-all group">
+                         <div class="service-icon w-12 h-12 bg-slate-100 text-brand-red rounded-full flex items-center justify-center text-xl mb-4 transition-colors"><i class="fa-solid fa-hard-hat"></i></div>
+                         <h4 class="font-header font-bold text-lg text-slate-900 mb-2">Baustellenbetreuung</h4>
+                         <p class="text-slate-600 text-sm">Unser kompetentes Team steht Ihnen selbstverständlich während der gesamten Dauer Ihrer Baumaßnahme mit Rat und Tat zu Seite.</p>
+                     </div>
+                     <div class="service-box bg-white p-6 rounded-sm shadow-md border border-slate-100 hover:shadow-xl transition-all group">
+                         <div class="service-icon w-12 h-12 bg-slate-100 text-brand-red rounded-full flex items-center justify-center text-xl mb-4 transition-colors"><i class="fa-solid fa-leaf"></i></div>
+                         <h4 class="font-header font-bold text-lg text-slate-900 mb-2">Energieberatung</h4>
+                         <p class="text-slate-600 text-sm">Machen Sie Ihr Haus zum Sparschwein. Wir beraten Sie objektiv, ehrlich und unverbindlich.</p>
+                     </div>
+                     <div class="service-box bg-white p-6 rounded-sm shadow-md border border-slate-100 hover:shadow-xl transition-all group">
+                         <div class="service-icon w-12 h-12 bg-slate-100 text-brand-red rounded-full flex items-center justify-center text-xl mb-4 transition-colors"><i class="fa-solid fa-comments"></i></div>
+                         <h4 class="font-header font-bold text-lg text-slate-900 mb-2">Fachberatung</h4>
+                         <p class="text-slate-600 text-sm">Ob Rohbau, Innenausbau oder die Neugestaltung Ihrer Außenanlage - gerne stehen wir Ihnen mit Rat und Tat zur Verfügung.</p>
+                     </div>
+                     <div class="service-box bg-white p-6 rounded-sm shadow-md border border-slate-100 hover:shadow-xl transition-all group">
+                         <div class="service-icon w-12 h-12 bg-slate-100 text-brand-red rounded-full flex items-center justify-center text-xl mb-4 transition-colors"><i class="fa-solid fa-fire-flame-simple"></i></div>
+                         <h4 class="font-header font-bold text-lg text-slate-900 mb-2">Gasflaschenservice</h4>
+                         <p class="text-slate-600 text-sm">Unser Partner Tyczka und wir bieten Ihnen eine Komplettversorgung mit klassischem Propangas sowie Staplergas.</p>
+                     </div>
+                     <div class="service-box bg-white p-6 rounded-sm shadow-md border border-slate-100 hover:shadow-xl transition-all group">
+                         <div class="service-icon w-12 h-12 bg-slate-100 text-brand-red rounded-full flex items-center justify-center text-xl mb-4 transition-colors"><i class="fa-solid fa-gift"></i></div>
+                         <h4 class="font-header font-bold text-lg text-slate-900 mb-2">Geschenkgutscheine</h4>
+                         <p class="text-slate-600 text-sm">Mit einem Geschenkgutschein haben Sie immer das ideale Geschenk für jeden Anlass.</p>
+                     </div>
+                     <div class="service-box bg-white p-6 rounded-sm shadow-md border border-slate-100 hover:shadow-xl transition-all group">
+                         <div class="service-icon w-12 h-12 bg-slate-100 text-brand-red rounded-full flex items-center justify-center text-xl mb-4 transition-colors"><i class="fa-solid fa-handshake"></i></div>
+                         <h4 class="font-header font-bold text-lg text-slate-900 mb-2">Handwerkervermittlung</h4>
+                         <p class="text-slate-600 text-sm">Wir unterstützen Sie gerne bei der Suche nach dem geeigneten Handwerker in Ihrer Gegend.</p>
+                     </div>
+                     <div class="service-box bg-white p-6 rounded-sm shadow-md border border-slate-100 hover:shadow-xl transition-all group">
+                         <div class="service-icon w-12 h-12 bg-slate-100 text-brand-red rounded-full flex items-center justify-center text-xl mb-4 transition-colors"><i class="fa-solid fa-truck-pickup"></i></div>
+                         <h4 class="font-header font-bold text-lg text-slate-900 mb-2">Krandienstleistung</h4>
+                         <p class="text-slate-600 text-sm">Durch unsere Kranfahrzeuge sind wir in der Lage, die Ware genau an den von Ihnen gewünschten Ort zu liefern.</p>
+                     </div>
+                     <div class="service-box bg-white p-6 rounded-sm shadow-md border border-slate-100 hover:shadow-xl transition-all group">
+                         <div class="service-icon w-12 h-12 bg-slate-100 text-brand-red rounded-full flex items-center justify-center text-xl mb-4 transition-colors"><i class="fa-solid fa-id-card"></i></div>
+                         <h4 class="font-header font-bold text-lg text-slate-900 mb-2">Kundenkonto</h4>
+                         <p class="text-slate-600 text-sm">Kauf auf Rechnung, Hinterlegung Ihrer Einkaufskonditionen, Artikelhistorie und vieles mehr.</p>
+                     </div>
+                     <div class="service-box bg-white p-6 rounded-sm shadow-md border border-slate-100 hover:shadow-xl transition-all group">
+                         <div class="service-icon w-12 h-12 bg-slate-100 text-brand-red rounded-full flex items-center justify-center text-xl mb-4 transition-colors"><i class="fa-solid fa-truck"></i></div>
+                         <h4 class="font-header font-bold text-lg text-slate-900 mb-2">Lieferservice</h4>
+                         <p class="text-slate-600 text-sm">Sie kaufen bei uns die benötigten Baustoffe und wir liefern diese direkt vor Ort: komfortabel, pünktlich, zeitsparend.</p>
+                     </div>
+                     <div class="service-box bg-white p-6 rounded-sm shadow-md border border-slate-100 hover:shadow-xl transition-all group">
+                         <div class="service-icon w-12 h-12 bg-slate-100 text-brand-red rounded-full flex items-center justify-center text-xl mb-4 transition-colors"><i class="fa-solid fa-car"></i></div>
+                         <h4 class="font-header font-bold text-lg text-slate-900 mb-2">Außendienst</h4>
+                         <p class="text-slate-600 text-sm">Wir besuchen Sie gerne bei sich zu Hause oder auf der Baustelle um örtliche Begebenheiten zu beurteilen.</p>
+                     </div>
+                     <div class="service-box bg-white p-6 rounded-sm shadow-md border border-slate-100 hover:shadow-xl transition-all group">
+                         <div class="service-icon w-12 h-12 bg-slate-100 text-brand-red rounded-full flex items-center justify-center text-xl mb-4 transition-colors"><i class="fa-solid fa-warehouse"></i></div>
+                         <h4 class="font-header font-bold text-lg text-slate-900 mb-2">Überdachte Ladezone</h4>
+                         <p class="text-slate-600 text-sm">Wir sorgen für „trockene Füße“. Verladen Sie die gekauften Baustoffe in unserer überdachten Ladezone.</p>
+                     </div>
+                 </div>
+             </div>
         </div>
 
     </main>
@@ -1159,7 +1965,7 @@
                 <h4 class="font-bold text-slate-900 mb-4 uppercase text-sm tracking-wider">Service</h4>
                 <ul class="space-y-2 text-sm">
                     <li><button onclick="switchView('ansprechpartner')" class="hover:text-brand-red transition-colors text-left">Ansprechpartner</button></li>
-                    <li><button onclick="switchView('services')" class="hover:text-brand-red transition-colors text-left">Dienstleistungen</button></li>
+                    <li><span class="text-slate-400 cursor-not-allowed">Lieferservice</span></li>
                 </ul>
             </div>
             <div>
