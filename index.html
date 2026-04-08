@@ -134,6 +134,9 @@
 </head>
 <body id="top" class="bg-gray-50 text-gray-900 dark:bg-[#050505] dark:text-[#e5e5e5] selection:bg-brand-gold selection:text-white">
 
+<div id="scroll-container" class="scroll-container" tabindex="0" aria-label="Seiteninhalt">
+<div id="scroll-content" class="scroll-content">
+
     <!-- STICKY WHATSAPP BUTTON -->
     <a href="https://wa.me/4915168586425" target="_blank" rel="noopener noreferrer" 
        class="fixed bottom-6 right-6 z-[60] bg-[#25D366] text-white w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center shadow-[0_10px_25px_rgba(37,211,102,0.4)] hover:shadow-[0_15px_35px_rgba(37,211,102,0.6)] transition-all duration-300 transform hover:scale-110 active:scale-95 group"
@@ -1132,6 +1135,110 @@ document.addEventListener("DOMContentLoaded", () => {
     requestAnimationFrame(raf);
   }
   requestAnimationFrame(raf);
+});
+</script>
+
+</div>
+</div>
+
+<style>
+.scroll-container { position: fixed; inset: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior-y: none; z-index: 10; }
+.scroll-container:focus { outline: none; }
+.scroll-content { min-height: 101%; }
+</style>
+<script>
+class RubberBandOverscroll {
+    constructor(containerElement, contentElement) {
+        this.container = containerElement; this.content = contentElement;
+        this.startY = 0; this.offset = 0; this.unresistedOffset = 0;
+        this.isDragging = false; this.isOverscrolling = false; this.renderPending = false;
+        this.wheelTimeout = null; this.maxScroll = 0;
+        this.onTouchStart = this.onTouchStart.bind(this);
+        this.onTouchMove = this.onTouchMove.bind(this);
+        this.onTouchEnd = this.onTouchEnd.bind(this);
+        this.onWheel = this.onWheel.bind(this);
+        this.render = this.render.bind(this);
+        this.animateSnap = this.animateSnap.bind(this);
+        this.bindEvents();
+    }
+    bindEvents() {
+        this.container.addEventListener("touchstart", this.onTouchStart, { passive: true });
+        this.container.addEventListener("touchmove", this.onTouchMove, { passive: false });
+        this.container.addEventListener("touchend", this.onTouchEnd, { passive: true });
+        this.container.addEventListener("touchcancel", this.onTouchEnd, { passive: true });
+        this.container.addEventListener("wheel", this.onWheel, { passive: false });
+    }
+    calculateResistance(distance) {
+        const absDist = Math.abs(distance);
+        return Math.sign(distance) * (absDist * 0.35 * (1 - Math.exp(-absDist * 0.0066666)));
+    }
+    static easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+    onTouchStart(e) {
+        this.isDragging = true; this.startY = e.touches[0].clientY;
+        this.maxScroll = this.container.scrollHeight - this.container.clientHeight;
+        if (this.offset !== 0) { this.startY -= this.unresistedOffset; }
+    }
+    onTouchMove(e) {
+        if (!this.isDragging) return;
+        const deltaY = e.touches[0].clientY - this.startY;
+        const isAtTop = this.container.scrollTop <= 0 && deltaY > 0;
+        const isAtBottom = this.container.scrollTop >= this.maxScroll && deltaY < 0;
+        if (isAtTop || isAtBottom || this.offset !== 0) {
+            if (e.cancelable) e.preventDefault();
+            if (!this.isOverscrolling) { this.content.style.willChange = "transform"; }
+            this.isOverscrolling = true; this.unresistedOffset = deltaY;
+            this.offset = this.calculateResistance(this.unresistedOffset);
+            this.scheduleRender();
+        }
+    }
+    onTouchEnd() {
+        this.isDragging = false;
+        if (this.offset !== 0) { this.snapBack(); }
+    }
+    onWheel(e) {
+        const max = this.container.scrollHeight - this.container.clientHeight;
+        const isAtTop = this.container.scrollTop <= 0 && e.deltaY < 0;
+        const isAtBottom = this.container.scrollTop >= this.maxScroll && e.deltaY > 0;
+        if (isAtTop || isAtBottom || this.offset !== 0) {
+            if (e.cancelable) e.preventDefault();
+            if (!this.isOverscrolling) { this.content.style.willChange = "transform"; }
+            this.isOverscrolling = true; this.unresistedOffset -= e.deltaY;
+            this.offset = this.calculateResistance(this.unresistedOffset);
+            this.scheduleRender();
+            clearTimeout(this.wheelTimeout);
+            this.wheelTimeout = setTimeout(() => { if (!this.isDragging) this.snapBack(); }, 150);
+        }
+    }
+    scheduleRender() {
+        if (!this.renderPending) { this.renderPending = true; requestAnimationFrame(this.render); }
+    }
+    render() {
+        this.content.style.transform = `translateY(${this.offset}px)`;
+        this.renderPending = false;
+    }
+    snapBack() {
+        this.startOffset = this.offset; this.startTime = performance.now();
+        requestAnimationFrame(this.animateSnap);
+    }
+    animateSnap(currentTime) {
+        if (this.isDragging) return;
+        const progress = Math.min((currentTime - this.startTime) / 400, 1);
+        this.offset = this.startOffset * (1 - RubberBandOverscroll.easeOutCubic(progress));
+        this.scheduleRender();
+        if (progress < 1) {
+            requestAnimationFrame(this.animateSnap);
+        } else {
+            this.offset = 0; this.unresistedOffset = 0; this.isOverscrolling = false;
+            this.scheduleRender();
+            this.content.style.willChange = "auto"; this.content.style.transform = "";
+        }
+    }
+}
+// Initialisierung
+document.addEventListener("DOMContentLoaded", () => {
+    const container = document.getElementById("scroll-container");
+    const content = document.getElementById("scroll-content");
+    if (container && content) new RubberBandOverscroll(container, content);
 });
 </script>
 
